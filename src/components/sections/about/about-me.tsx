@@ -50,39 +50,6 @@ const AboutMe = () => {
           alt="Profile photo"
           className="relative w-[125vw] md:w-[60vw] lg:w-[40vw] h-[75vh] md:h-[75dvh] object-contain object-bottom rounded-3xl"
         />
-
-        {/* Overlay Text inside image */}
-        {/* <div className="absolute bottom-0 left-0 w-full p-6 ">
-          <p className="font-mono text-sm text-primary mb-1">Status</p>
-          <p className=" font-medium">Available for Hire</p>
-        </div> */}
-        {/* </div> */}
-
-        {/* Floating Stats Cards (Parallax Layer 3) */}
-
-        {/* Stat 1: Instagram */}
-        {/* <StatCard
-          position="top-0 -right-12 md:-right-32"
-          label="Instagram"
-          value="20k+"
-          delay={0.2}
-        /> */}
-
-        {/* Stat 2: Views */}
-        {/* <StatCard
-          position="bottom-32 -left-8 md:-left-32"
-          label="Total Views"
-          value="5M+"
-          delay={0.3}
-        /> */}
-
-        {/* Stat 3: Clients */}
-        {/* <StatCard
-          position="bottom-10 -right-4 md:-right-20"
-          label="Global Clients"
-          value="50+"
-          delay={0.4}
-        /> */}
       </motion.div>
 
       {/* Mobile: Vertical Side Label (editorial, clears navbar + video) */}
