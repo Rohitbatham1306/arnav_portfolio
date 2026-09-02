@@ -9,6 +9,7 @@ import {
   FaYoutube,
   FaArrowRight,
   FaDiscord,
+  FaLinkedin,
 } from "react-icons/fa6";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { getCalApi } from "@calcom/embed-react";
@@ -163,19 +164,18 @@ export default function CreativeFooter() {
               <div className="relative size-12 overflow-hidden rounded-xl bg-linear-to-br from-background to-muted border border-border shadow-sm flex items-center justify-center">
                 <Image
                   src="/md-red-logo.svg"
-                  alt="Md Logo"
+                  alt="Arnav Logo"
                   width={32}
                   height={32}
                   className="object-contain"
                 />
               </div>
               <span className="text-xl font-bold tracking-tight">
-                Your Name
+                Arnav Roy
               </span>
             </Link>
             <p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
-              A creative agency crafting digital experiences that merge art with
-              functionality.
+              Gen AI Art Director + Marketing + Event Production + Technology.
             </p>
           </motion.div>
 
@@ -230,22 +230,27 @@ export default function CreativeFooter() {
             </h3>
             <div className="flex flex-wrap gap-2">
               <SocialLink
-                href="https://www.youtube.com/@yourusername"
-                icon={FaYoutube}
-                label="YouTube"
-              />
-              <SocialLink
-                href="https://www.behance.net/yourusername"
-                icon={FaBehance}
-                label="Behance"
-              />
-              <SocialLink
-                href="https://www.instagram.com/yourusername"
+                href="https://www.instagram.com/iamfreakazo/"
                 icon={FaInstagram}
                 label="Instagram"
               />
               <SocialLink
-                href="https://discord.gg/yourinvite"
+                href="https://www.linkedin.com/in/arnav-roy-05337b187/"
+                icon={FaLinkedin}
+                label="LinkedIn"
+              />
+              <SocialLink
+                href="https://www.behance.net/arnavroy"
+                icon={FaBehance}
+                label="Behance"
+              />
+              <SocialLink
+                href="https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3"
+                icon={FaYoutube}
+                label="YouTube"
+              />
+              <SocialLink
+                href="https://discord.gg/dXU2Y36ZMT"
                 icon={FaDiscord}
                 label="Discord"
               />
@@ -260,15 +265,7 @@ export default function CreativeFooter() {
           transition={{ delay: 0.2 }}
           className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border/40 py-6 text-xs text-muted-foreground md:flex-row"
         >
-          <p>© {currentYear} Your Name. All rights reserved.</p>
-          {/* <div className="flex gap-6">
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Terms of Service
-            </Link>
-          </div> */}
+          <p>© {currentYear} Arnav Roy. All rights reserved.</p>
         </motion.div>
       </div>
     </footer>

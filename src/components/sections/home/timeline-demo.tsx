@@ -1,200 +1,245 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useState } from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { FeatureCard } from "./features";
 import PhraseAnimation from "@/components/common/phrase-reveal";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+
+interface VideoPlayerCardProps {
+  src: string;
+  title: string;
+  aspect?: string;
+  className?: string;
+}
+
+const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
+  src,
+  title,
+  aspect = "aspect-[16/10]",
+  className = "",
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  return (
+    <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 ${className}`}>
+      <div className={`relative w-full ${aspect} overflow-hidden bg-neutral-950`}>
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+        {/* Title and control bar */}
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10">
+          <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
+            {title}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleMute}
+              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors"
+              aria-label={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+            </button>
+            <button
+              onClick={togglePlay}
+              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+            </button>
+          </div>
+        </div>
+      </div>
+    </FeatureCard>
+  );
+};
 
 export function TimelineDemo() {
   const data = [
     {
-      title: "SaaS Product Video Editing",
+      title: "01. AI Creative Direction ⭐",
       content: (
         <div>
-          <h3 className="text-xs font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-            <PhraseAnimation phrase="Showcase  Your  Product  in  Motion" />
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="Generative AI Films & Visual Storytelling" />
           </h3>
-          <p className="mb-8 text-xs text-muted-foreground md:text-lg mt-1.5">
-            <PhraseAnimation phrase="Transform your SaaS product into captivating demo videos. From feature highlights to onboarding tutorials, we create motion edits that convert viewers into customers and drive product adoption." />
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="generative ai • ai films • ai commercials • ai visuals • ai storytelling" />
           </p>
           <div className="mx-auto grid gap-4 lg:grid-cols-2">
-            <FeatureCard className="p-0 w-full">
-              <iframe
-                src="https://www.youtube.com/embed/eJDezE1DYPY?si=S70ttnnq2b5Yljj5"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder={0}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                className="aspect-[20/16]"
-              ></iframe>
-            </FeatureCard>
-
-            <FeatureCard className="p-0 w-full">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/ll8A79dL4NM?si=RuhQhcfA99L2XFNv"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
-            </FeatureCard>
-
-            <FeatureCard className="p-0 w-full lg:col-span-2">
-              <iframe
-                width="100%"
-                height="250"
-                src="https://www.youtube.com/embed/5tZu_mHkBCY?si=2aP9aBEoXgL8RLL3"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
-            </FeatureCard>
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Ai%20Transation.mp4"
+              title="AI World Transition Film"
+              aspect="aspect-[16/10]"
+              className="lg:col-span-2"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(1).mp4"
+              title="AI Banana Concept 01"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(2).mp4"
+              title="AI Banana Concept 02"
+              aspect="aspect-[16/10]"
+            />
           </div>
         </div>
       ),
     },
     {
-      title: "2D Animation & Storytelling ",
+      title: "02. Creative & Advertising",
       content: (
         <div>
-          <h3 className="text-xs font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-            <PhraseAnimation phrase="Bringing  Stories  To  Motion" />
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="Brand Concepts & Visual Communication" />
           </h3>
-          <p className="mb-8 text-xs text-muted-foreground md:text-lg mt-1.5">
-            <PhraseAnimation phrase="From original stories to scroll-stopping brand ads, transform concepts into 2D animations that simplify your message and capture your audience's attention instantly." />
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="campaigns • art direction • brand concepts • creative strategy • visual communication" />
           </p>
           <div className="mx-auto grid gap-4 lg:grid-cols-2">
-            <FeatureCard className="p-0 w-full">
-              <iframe
-                src="https://www.youtube.com/embed/dn-T3-YFZtw?si=8RA6BBkXCjqZXMjk"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder={0}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                className="aspect-[20/16]"
-              ></iframe>
-            </FeatureCard>
-
-            <FeatureCard className="p-0 w-full">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/WF-f7H6TIhQ?si=kX0IbsybYUaeg0BM"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
-            </FeatureCard>
-
-            <FeatureCard className="p-0 w-full lg:col-span-2">
-              <iframe
-                width="100%"
-                height="250"
-                src="https://www.youtube.com/embed/Ku8pZH4Ll28?si=wVxyHvtJhHuLAtMP"
-                loading="lazy"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
-            </FeatureCard>
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Coco%20cola%20UGC.mp4"
+              title="Coca-Cola UGC Brand Campaign"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1%20(1).MP4"
+              title="Commercial Cinematic Spot"
+              aspect="aspect-[16/10]"
+            />
           </div>
         </div>
       ),
     },
-    // {
-    //   title: "High-Impact Reels  for  Real Growth",
-    //   content: (
-    //     <div>
-    //       <h3 className="text-xs font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-    //         <PhraseAnimation phrase="Fast.   Clean.   Hooked  from  the  first  second" />
-    //       </h3>
-    //       <p className="mb-8 text-xs text-muted-foreground md:text-lg mt-1.5">
-    //         <PhraseAnimation phrase="fast, clean 2D reels designed to win the first second. Every edit is focused on holding attention and driving growth for your channel or brand." />
-    //       </p>
-    //       <div className="mx-auto grid gap-4 lg:grid-cols-3">
-    //         <FeatureCard className="p-0 w-full">
-    //           <div>
-    //             <iframe
-    //               loading="lazy"
-    //               title="Youtube Video"
-    //               src="https://www.youtube.com/embed/OlR9TWUJlSM"
-    //               frameBorder="0"
-    //               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    //               allowFullScreen
-    //               className="w-full aspect-[9/16]"
-    //             />
-    //           </div>
-    //         </FeatureCard>
-
-    //         <FeatureCard className="p-0 w-full">
-    //           <iframe
-    //             width="100%"
-    //             height="100%"
-    //             src="https://www.youtube.com/embed/CpAIy_TVZqo"
-    //             title="YouTube video player"
-    //             frameBorder="0"
-    //             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    //             referrerPolicy="strict-origin-when-cross-origin"
-    //             allowFullScreen
-    //           ></iframe>
-    //         </FeatureCard>
-
-    //         <FeatureCard className="p-0 w-full">
-    //           <iframe
-    //             width="100%"
-    //             height="100%"
-    //             src="https://www.youtube.com/embed/-h2KSW2kpxE"
-    //             title="YouTube video player"
-    //             frameBorder="0"
-    //             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    //             referrerPolicy="strict-origin-when-cross-origin"
-    //             allowFullScreen
-    //             className="w-full aspect-[9/16]"
-    //           ></iframe>
-    //         </FeatureCard>
-    //         {/* <FeatureCard className="p-0 w-full">
-    //           <iframe
-    //             width="100%"
-    //             height="100%"
-    //             src="https://www.youtube.com/embed/mvPQwLOXbB4"
-    //             title="YouTube video player"
-    //             frameBorder="0"
-    //             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    //             referrerPolicy="strict-origin-when-cross-origin"
-    //             allowFullScreen
-    //             className="w-full aspect-[9/16]"
-    //           ></iframe>
-    //         </FeatureCard> */}
-    //       </div>
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   title: "Our Video Editing Process",
-    //   content: (
-    //     <div>
-    //       <img
-    //         src="https://framerusercontent.com/images/3j4k9lOKgq5gCTabInH0bUlT0I.png?scale-down-to=2048"
-    //         alt=""
-    //       />
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "03. Social, UGC & Influencer Marketing",
+      content: (
+        <div>
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="High-Engagement Viral Content & Reels" />
+          </h3>
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="social campaigns • reels • ugc • influencer content • content strategy" />
+          </p>
+          <div className="mx-auto grid gap-4 lg:grid-cols-2">
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA.mp4"
+              title="Banana Viral 3D Motion Reel"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
+              title="Social Campaign Creative"
+              aspect="aspect-[16/10]"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "04. Film & Production",
+      content: (
+        <div>
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="Commercials, 3D Editing & Brand Films" />
+          </h3>
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="commercials • brand films • video production • photography • editing • 3d" />
+          </p>
+          <div className="mx-auto grid gap-4 lg:grid-cols-2">
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3%20(1).MP4"
+              title="Brand Film & Visual Edit"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4%20(1).mp4"
+              title="3D Production Showcase"
+              aspect="aspect-[16/10]"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "05. Experiential & Event Production",
+      content: (
+        <div>
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="Brand Activations & On-Ground Experiences" />
+          </h3>
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="brand activations • events • installations • kiosks • on-ground experiences" />
+          </p>
+          <div className="mx-auto grid gap-4 lg:grid-cols-2">
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/5%20(1).mp4"
+              title="Experiential Activation 01"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/6%20(1).mp4"
+              title="Event Installation 02"
+              aspect="aspect-[16/10]"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "06. Creative Technology & AI Automation",
+      content: (
+        <div>
+          <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
+            <PhraseAnimation phrase="AI Workflows & Marketing Automation" />
+          </h3>
+          <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
+            <PhraseAnimation phrase="ai workflows • marketing automation • digital experiences • creative-tech solutions" />
+          </p>
+          <div className="mx-auto grid gap-4 lg:grid-cols-1">
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/7.mp4"
+              title="Creative Tech & Automation Flow"
+              aspect="aspect-[21/9]"
+            />
+          </div>
+        </div>
+      ),
+    },
   ];
+
   return (
     <div className="relative w-full overflow-clip mt-10">
       <Timeline data={data} />

@@ -153,7 +153,7 @@ const AboutScrollSection = () => {
                 transition={{ duration: 0.7, delay: 2.15 }}
                 className="mb-6 text-sm leading-relaxed text-white/70 sm:text-base"
               >
-                Creative Direction + AI + Marketing + Production + Technology.
+                Gen AI Art Director + Marketing + Event Production + Technology.
                 Transforming brand narratives into cinematic experiences, high-engagement
                 visuals, and next-generation automated workflows. Built on one simple rule:
                 quality over quantity, always.

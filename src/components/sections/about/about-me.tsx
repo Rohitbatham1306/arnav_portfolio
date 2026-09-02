@@ -105,7 +105,7 @@ const AboutMe = () => {
           </p>
           <div className="flex items-center gap-4 text-sm font-bold">
             <Link
-              href={"https://www.instagram.com/yourusername"}
+              href={"https://www.instagram.com/iamfreakazo/"}
               target="_blank"
             >
               <span className="hover:text-primary transition-colors cursor-pointer">
@@ -114,11 +114,20 @@ const AboutMe = () => {
             </Link>
             <span className="w-1 h-1 bg-foreground rounded-full" />
             <Link
-              href={"https://www.youtube.com/@yourusername"}
+              href={"https://www.linkedin.com/in/arnav-roy-05337b187/"}
               target="_blank"
             >
               <span className="hover:text-primary transition-colors cursor-pointer">
-                Youtube
+                LinkedIn
+              </span>
+            </Link>
+            <span className="w-1 h-1 bg-foreground rounded-full" />
+            <Link
+              href={"https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3"}
+              target="_blank"
+            >
+              <span className="hover:text-primary transition-colors cursor-pointer">
+                YouTube
               </span>
             </Link>
           </div>

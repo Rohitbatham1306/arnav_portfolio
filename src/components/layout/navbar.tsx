@@ -15,10 +15,11 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { name: "YouTube", href: "https://www.youtube.com/@yourusername" },
-  { name: "Behance", href: "https://www.behance.net/yourusername" },
-  { name: "Instagram", href: "https://www.instagram.com/yourusername" },
-  { name: "Discord", href: "https://discord.gg/yourinvite" },
+  { name: "Instagram", href: "https://www.instagram.com/iamfreakazo/" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/arnav-roy-05337b187/" },
+  { name: "Behance", href: "https://www.behance.net/arnavroy" },
+  { name: "YouTube", href: "https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3" },
+  { name: "Discord", href: "https://discord.gg/dXU2Y36ZMT" },
 ];
 
 const EASE_OPEN: [number, number, number, number] = [0.76, 0, 0.24, 1];

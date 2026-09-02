@@ -25,9 +25,20 @@ export function VideoModal({ item, onClose }: VideoModalProps) {
             {item?.title ?? "Video"}
           </DialogPrimitive.Title>
 
-          {/* Full-viewport Vimeo player or High-Res Artwork preview */}
+          {/* Full-viewport Video Player, Vimeo player or High-Res Artwork preview */}
           {item && (
-            item.vimeoId && item.vimeoId !== "000000000" ? (
+            item.videoUrl ? (
+              <div className="relative h-full w-full flex items-center justify-center p-4 md:p-8 bg-black">
+                <video
+                  key={item.videoUrl}
+                  src={item.videoUrl}
+                  autoPlay
+                  controls
+                  playsInline
+                  className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+                />
+              </div>
+            ) : item.vimeoId && item.vimeoId !== "000000000" ? (
               <iframe
                 key={item.vimeoId}
                 src={`https://player.vimeo.com/video/${item.vimeoId}?autoplay=1&byline=0&title=0&dnt=1`}
