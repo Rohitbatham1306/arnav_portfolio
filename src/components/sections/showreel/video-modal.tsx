@@ -25,17 +25,28 @@ export function VideoModal({ item, onClose }: VideoModalProps) {
             {item?.title ?? "Video"}
           </DialogPrimitive.Title>
 
-          {/* Full-viewport Vimeo player with controls */}
+          {/* Full-viewport Vimeo player or High-Res Artwork preview */}
           {item && (
-            <iframe
-              key={item.vimeoId}
-              src={`https://player.vimeo.com/video/${item.vimeoId}?autoplay=1&byline=0&title=0&dnt=1`}
-              className="h-full w-full"
-              style={{ border: 0 }}
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title={item.title}
-            />
+            item.vimeoId && item.vimeoId !== "000000000" ? (
+              <iframe
+                key={item.vimeoId}
+                src={`https://player.vimeo.com/video/${item.vimeoId}?autoplay=1&byline=0&title=0&dnt=1`}
+                className="h-full w-full"
+                style={{ border: 0 }}
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title={item.title}
+              />
+            ) : (
+              <div className="relative h-full w-full flex items-center justify-center p-8 bg-black">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.thumbnail}
+                  alt={item.title}
+                  className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+                />
+              </div>
+            )
           )}
 
           {/* Top gradient */}

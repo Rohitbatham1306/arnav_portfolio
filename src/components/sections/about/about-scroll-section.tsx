@@ -1,319 +1,136 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Placeholder sequence: Lorem Picsum's seeded URLs return a distinct, stable
-// photo per seed, which gives us 47 real (if unrelated) frames for the
-// scroll-scrub without needing an account. `seed-${index}` keeps each frame
-// deterministic across reloads. On phones we never need full-res frames for a
-// scroll-scrub, so we cap the requested width per device.
-// TODO: swap this for your own 47 sequential frames (e.g. hosted on
-// ImageKit/Cloudinary/S3) for a real scrubbing animation instead of a slideshow.
-function buildImageUrl(index: number): string {
-  const width =
-    typeof window === "undefined"
-      ? 1200
-      : Math.round(
-          Math.min(
-            window.innerWidth * Math.min(window.devicePixelRatio || 1, 2),
-            window.innerWidth < 768 ? 900 : 1920,
-          ),
-        );
-  const height = Math.round(width * 1.3);
-
-  return `https://picsum.photos/seed/about-section-${index}/${width}/${height}`;
-}
-
-const aboutSectionImages = Array.from({ length: 47 }, (_, i) => ({ index: i }));
-
-// Ratio: 5 units (images) + 2 units (text reveal) = 7 total → h-[700vh]
-const IMAGE_DURATION = 5;
-const TEXT_DURATION = 2;
+import React, { useRef, useCallback } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { Layers } from "lucide-react";
 
 // oklch(59.71% 0.23 23.86) ≈ #c93a2a — site-wide red accent
 const redColor = "oklch(59.71% 0.23 23.86)";
 
 const AboutScrollSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const pinWrapperRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const frameIndexRef = useRef({ value: 0 });
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Preload all images
-  useEffect(() => {
-    const loadImages = async () => {
-      const promises = aboutSectionImages.map((img, index) => {
-        return new Promise<HTMLImageElement>((resolve, reject) => {
-          const image = new window.Image();
-          image.crossOrigin = "anonymous";
-          image.src = buildImageUrl(img.index);
-          image.onload = () => {
-            imagesRef.current[index] = image;
-            resolve(image);
-          };
-          image.onerror = reject;
-        });
-      });
+  // 3D Mouse Parallax on the artwork panel
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-      try {
-        await Promise.all(promises);
-        setImagesLoaded(true);
-      } catch (error) {
-        console.error("Error loading images:", error);
-      }
-    };
+  const springConfig = { stiffness: 140, damping: 18, mass: 0.6 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
+  const glareX = useSpring(useTransform(mouseX, [-0.5, 0.5], [10, 90]), springConfig);
+  const glareY = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, 90]), springConfig);
 
-    loadImages();
-  }, []);
-
-  // Render frame on canvas
-  const renderFrame = (index: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const img = imagesRef.current[index];
-    if (!img) return;
-
-    // Only touch canvas.width/height when the viewport actually changed.
-    // Assigning them resets + reallocates the entire backing store, so doing it
-    // on every scrubbed frame (as before) was the main source of scroll jank on
-    // phones. Reading them first and comparing keeps 99% of frames allocation-free.
-    if (canvas.width !== window.innerWidth) canvas.width = window.innerWidth;
-    if (canvas.height !== window.innerHeight)
-      canvas.height = window.innerHeight;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Calculate dimensions to cover the canvas (like object-fit: cover)
-    const imgRatio = img.width / img.height;
-    const canvasRatio = canvas.width / canvas.height;
-
-    let drawWidth, drawHeight, drawX, drawY;
-
-    if (canvasRatio > imgRatio) {
-      drawWidth = canvas.width;
-      drawHeight = canvas.width / imgRatio;
-      drawX = 0;
-      drawY = (canvas.height - drawHeight) / 2;
-    } else {
-      drawHeight = canvas.height;
-      drawWidth = canvas.height * imgRatio;
-      drawX = (canvas.width - drawWidth) / 2;
-      drawY = 0;
-    }
-
-    ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-  };
-
-  // GSAP ScrollTrigger animation
-  useGSAP(
-    () => {
-      if (
-        !imagesLoaded ||
-        !sectionRef.current ||
-        !canvasRef.current ||
-        !pinWrapperRef.current ||
-        !textRef.current
-      )
-        return;
-
-      // Render the first frame immediately
-      renderFrame(0);
-
-      // Single timeline: pin the whole wrapper (canvas + text overlay) for the
-      // entire section. Phase 1 → image frames, Phase 2 → text reveal.
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          pin: pinWrapperRef.current,
-          scrub: 0.5,
-        },
-      });
-
-      // Phase 1 — animate through all image frames
-      tl.to(
-        frameIndexRef.current,
-        {
-          value: aboutSectionImages.length - 1,
-          ease: "none",
-          duration: IMAGE_DURATION,
-          onUpdate: () => {
-            renderFrame(Math.round(frameIndexRef.current.value));
-          },
-        },
-        0,
-      );
-
-      // Scroll hint — stays visible until ~frame 15, then fades out over the
-      // next few frames so it never overlaps the rest of the sequence.
-      const scrollHint =
-        pinWrapperRef.current.querySelector<HTMLElement>("[data-scroll-hint]");
-
-      if (scrollHint) {
-        const lastFrame = aboutSectionImages.length - 1;
-        const frameToTime = (frame: number) =>
-          (IMAGE_DURATION * frame) / lastFrame;
-        const fadeStart = frameToTime(0);
-        const fadeEnd = frameToTime(30);
-
-        tl.to(
-          scrollHint,
-          { opacity: 0, ease: "none", duration: fadeEnd - fadeStart },
-          fadeStart,
-        );
-      }
-
-      // Phase 2 — progressively reveal the about card once last frame is held
-      const overlay = textRef.current.querySelector<HTMLElement>(
-        "[data-reveal-overlay]",
-      );
-
-      if (overlay) {
-        tl.fromTo(
-          overlay,
-          { opacity: 0 },
-          { opacity: 1, ease: "none", duration: TEXT_DURATION / 2 },
-          IMAGE_DURATION,
-        );
-      }
-
-      const textLines =
-        textRef.current.querySelectorAll<HTMLElement>("[data-reveal-line]");
-
-      tl.fromTo(
-        textLines.length ? textLines : textRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          ease: "power2.out",
-          duration: TEXT_DURATION,
-          stagger: textLines.length
-            ? TEXT_DURATION / (textLines.length * 2)
-            : 0,
-        },
-        IMAGE_DURATION, // starts right after image phase ends
-      );
-
-      // Handle window resize
-      const handleResize = () => {
-        renderFrame(Math.round(frameIndexRef.current.value));
-        ScrollTrigger.refresh();
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = panelRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      mouseX.set(x);
+      mouseY.set(y);
     },
-    { scope: sectionRef, dependencies: [imagesLoaded] },
+    [mouseX, mouseY]
   );
 
+  const handleMouseLeave = useCallback(() => {
+    mouseX.set(0);
+    mouseY.set(0);
+  }, [mouseX, mouseY]);
+
   return (
-    // 700vh = 500vh image scroll + 200vh text reveal
-    <div ref={sectionRef} className="relative h-[800vh]">
-      {/* Loading State — scoped to this section (absolute, not fixed) so the
-          47-frame preload never covers the hero/above-the-fold content */}
-      {!imagesLoaded && (
-        <div className="absolute inset-x-0 top-0 z-40 flex h-screen items-center justify-center bg-black">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent" />
-            <p className="text-lg text-white">Loading images...</p>
-          </div>
-        </div>
-      )}
+    <section
+      id="about-section"
+      className="relative min-h-screen w-full overflow-hidden bg-[#060608] py-20 lg:py-28 flex items-center justify-center select-none"
+    >
+      {/* ── FULL-BLEED BACKGROUND IMAGE (ACROSS ENTIRE 100% WIDTH) ── */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+        <Image
+          src="/bg/1.png"
+          alt="About Section Full Background"
+          fill
+          priority
+          quality={95}
+          className="object-cover object-center opacity-45 scale-105"
+          sizes="100vw"
+        />
+        {/* Full-width gradient overlays for readability and cinematic atmosphere */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/75 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none" />
+      </div>
 
-      {/* Pinned container — holds both canvas and text overlay */}
+      {/* ── BACKGROUND ATMOSPHERE & NOISE ── */}
+      <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.035] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+      {/* Ambient Red Glow Bloom */}
       <div
-        ref={pinWrapperRef}
-        className="relative h-screen w-full overflow-hidden"
-      >
-        {/* Canvas for rendering frames */}
-        <canvas ref={canvasRef} className="h-full w-full" />
+        className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[160px] opacity-25 z-10"
+        style={{
+          background: "radial-gradient(circle, rgba(201, 58, 42, 0.5) 0%, rgba(10, 10, 20, 0.8) 60%, transparent 80%)",
+        }}
+      />
 
-        {/* Scroll hint — nudges the user to keep scrolling to play the reel */}
-        <div
-          data-scroll-hint
-          className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 md:inset-y-auto md:bottom-10 md:justify-start"
-        >
-          <span
-            className="text-[10px] uppercase tracking-[0.35em] text-white/70 md:text-xs"
-            style={{ fontFamily: "'DM Mono', monospace" }}
-          >
-            Scroll to play
-          </span>
-          <span
-            className="flex h-9 w-5.5 items-start justify-center rounded-full border pt-2"
-            style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.6)" }}
-          >
-            <span
-              className="h-1.5 w-1.5 animate-bounce rounded-full"
-              style={{ backgroundColor: redColor }}
-            />
-          </span>
-        </div>
-
-        {/* Creative about card — revealed once the last frame is held */}
-        <div ref={textRef} className="pointer-events-none absolute inset-0">
-          {/* Readability gradient over the frame */}
-          <div
-            data-reveal-overlay
-            className="absolute inset-0 bg-linear-to-r from-black/80 via-black/35 to-transparent opacity-0"
-          />
-
-          <div className="absolute inset-y-0 left-0 flex w-full flex-col justify-center px-6 sm:w-[55%] sm:px-14 lg:px-20">
-            <div className="relative max-w-xl p-8 sm:p-10">
-              {/* Corner brackets */}
+      <div className="relative z-20 container mx-auto px-6 sm:px-10 lg:px-16 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* ══════════ LEFT COLUMN: ABOUT ME CARD (REVEALS AFTER ~1.8s) ══════════ */}
+          <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 1.1,
+                delay: 1.8, // 1.8s delay: reveals after image has appeared
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="relative p-7 sm:p-10 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl"
+            >
+              {/* Precision Corner Brackets */}
               <div
-                data-reveal-line
-                className="absolute left-0 top-0 h-8 w-8 border-l border-t opacity-0"
-                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.6)" }}
+                className="absolute left-0 top-0 h-7 w-7 border-l-2 border-t-2"
+                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.7)" }}
               />
               <div
-                data-reveal-line
-                className="absolute right-0 top-0 h-8 w-8 border-r border-t opacity-0"
-                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.6)" }}
+                className="absolute right-0 top-0 h-7 w-7 border-r-2 border-t-2"
+                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.7)" }}
               />
               <div
-                data-reveal-line
-                className="absolute bottom-0 left-0 h-8 w-8 border-b border-l opacity-0"
-                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.6)" }}
+                className="absolute bottom-0 left-0 h-7 w-7 border-b-2 border-l-2"
+                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.7)" }}
               />
               <div
-                data-reveal-line
-                className="absolute bottom-0 right-0 h-8 w-8 border-b border-r opacity-0"
-                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.6)" }}
+                className="absolute bottom-0 right-0 h-7 w-7 border-b-2 border-r-2"
+                style={{ borderColor: "oklch(59.71% 0.23 23.86 / 0.7)" }}
               />
 
-              <p
-                data-reveal-line
-                className="mb-5 text-[10px] uppercase tracking-[0.3em] opacity-0 md:text-xs"
+              {/* Tag */}
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 1.9 }}
+                className="mb-4 text-[10px] uppercase tracking-[0.3em] md:text-xs"
                 style={{
                   fontFamily: "'DM Mono', monospace",
                   color: redColor,
                 }}
               >
                 ✦ About Me ✦
-              </p>
+              </motion.p>
 
-              <h2
-                data-reveal-line
-                className="mb-5 text-3xl font-bold leading-[1.08] text-white opacity-0 sm:text-4xl lg:text-5xl"
+              {/* Main Headline */}
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 2.0 }}
+                className="mb-5 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.08] text-white"
               >
                 I&apos;d rather let the{" "}
                 <span
@@ -326,64 +143,193 @@ const AboutScrollSection = () => {
                   work
                 </span>{" "}
                 do the talking.
-              </h2>
+              </motion.h2>
 
-              <p
-                data-reveal-line
-                className="mb-6 max-w-md text-sm leading-relaxed text-white/60 opacity-0 sm:text-base"
+              {/* Bio description */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 2.15 }}
+                className="mb-6 text-sm leading-relaxed text-white/70 sm:text-base"
               >
-                7 years of turning design into motion — across brands, creators,
-                and culture-led stories. Built on one simple rule: quality over
-                quantity, always.
-              </p>
+                Creative Direction + AI + Marketing + Production + Technology.
+                Transforming brand narratives into cinematic experiences, high-engagement
+                visuals, and next-generation automated workflows. Built on one simple rule:
+                quality over quantity, always.
+              </motion.p>
 
               {/* Accent divider */}
-              <div
-                data-reveal-line
-                className="mb-6 h-px w-24 opacity-0"
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 2.25 }}
+                className="mb-6 h-px w-24 origin-left"
                 style={{
                   backgroundImage: `linear-gradient(to right, ${redColor}, transparent)`,
                 }}
               />
 
               {/* Discipline chips */}
-              <div
-                data-reveal-line
-                className="mb-8 flex flex-wrap items-center gap-3 opacity-0"
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 2.35 }}
+                className="mb-7 flex flex-wrap items-center gap-2.5"
               >
-                {["CREATIVE DIRECTION", "MOTION", "ANIMATION", "EDIT"].map(
-                  (discipline, i) => (
-                    <span
-                      key={discipline}
-                      className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-white/50"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
-                    >
-                      {i !== 0 && (
-                        <span
-                          className="h-1 w-1 rounded-full"
-                          style={{ backgroundColor: redColor }}
-                        />
-                      )}
-                      {discipline}
-                    </span>
-                  ),
-                )}
-              </div>
+                {[
+                  "AI CREATIVE DIRECTION",
+                  "CREATIVE & ADVERTISING",
+                  "SOCIAL & INFLUENCER",
+                  "FILM & PRODUCTION",
+                  "EXPERIENTIAL",
+                  "CREATIVE TECH",
+                ].map((discipline, i) => (
+                  <span
+                    key={discipline}
+                    className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/60"
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {i !== 0 && (
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ backgroundColor: redColor }}
+                      />
+                    )}
+                    {discipline}
+                  </span>
+                ))}
+              </motion.div>
 
-              <p data-reveal-line className="opacity-0">
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 2.5 }}
+              >
                 <span
-                  className="text-xs uppercase tracking-[0.25em] text-white"
+                  className="text-xs uppercase tracking-[0.25em] text-white/90"
                   style={{ fontFamily: "'DM Mono', monospace" }}
                 >
                   Happy to collaborate
                 </span>{" "}
                 <span style={{ color: redColor }}>✦</span>
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
           </div>
+
+          {/* ══════════ RIGHT COLUMN: CINEMATIC 3D ARTWORK PANEL (IMAGE 2 - SHOWS FIRST) ══════════ */}
+          <div
+            ref={panelRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="lg:col-span-7 flex flex-col items-center justify-center relative order-1 lg:order-2"
+            style={{ perspective: "1300px" }}
+          >
+            {/* Outer 3D Perspective Card (Clean, borderless padding removed) */}
+            <motion.div
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              initial={{
+                opacity: 0,
+                scale: 0.86,
+                rotateY: 12,
+                rotateX: -5,
+                y: 35,
+              }}
+              whileInView={{
+                opacity: 1,
+                scale: 1,
+                rotateY: 0,
+                rotateX: 0,
+                y: 0,
+              }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 1.6,
+                delay: 0.2, // Image 2 animates in FIRST
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="group relative w-full aspect-[16/10] max-h-[580px] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_30px_90px_-15px_rgba(0,0,0,0.95)] border border-white/10 bg-black cursor-pointer"
+            >
+              {/* Dynamic Glare Specular Highlight Reflection */}
+              <motion.div
+                className="pointer-events-none absolute -inset-[100%] z-30 opacity-30 mix-blend-overlay transition-opacity duration-500"
+                style={{
+                  background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.4) 0%, transparent 60%)`,
+                }}
+              />
+
+              {/* Full Image Artwork */}
+              <div className="relative w-full h-full overflow-hidden bg-black">
+                <Image
+                  src="/portfolio/image-2.png"
+                  alt="Arnav Artwork - Visual Architecture"
+                  fill
+                  priority
+                  quality={95}
+                  className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 60vw"
+                />
+
+                {/* Cinematic Depth & Lighting Gradients */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent z-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35 z-10 pointer-events-none" />
+
+                {/* Corner Studio Crosshair Marks */}
+                <div className="pointer-events-none absolute top-3 left-3 size-4 border-t-2 border-l-2 border-white/40 z-30" />
+                <div className="pointer-events-none absolute top-3 right-3 size-4 border-t-2 border-r-2 border-white/40 z-30" />
+                <div className="pointer-events-none absolute bottom-3 left-3 size-4 border-b-2 border-l-2 border-white/40 z-30" />
+                <div className="pointer-events-none absolute bottom-3 right-3 size-4 border-b-2 border-r-2 border-white/40 z-30" />
+
+                {/* Artwork Metadata In-Panel Tag */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="absolute bottom-0 left-0 right-0 z-20 p-5 sm:p-7 flex items-end justify-between"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2.5 py-0.5 rounded-full text-[9px] font-mono font-semibold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/15 text-white">
+                        FEATURED KEY VISUAL
+                      </span>
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-white/60">
+                        02. Creative & Advertising
+                      </span>
+                    </div>
+                    <h3 className="text-lg sm:text-2xl font-bold tracking-tight text-white drop-shadow-md">
+                      Visual Architecture & Direction
+                    </h3>
+                  </div>
+
+                  {/* 3D Depth pill indicator */}
+                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-[10px] font-mono uppercase tracking-widest text-white/70">
+                    <Layers className="size-3 text-red-400" />
+                    <span>3D Viewport</span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Ambient Floor Shadow & Red Reflected Light */}
+            <div
+              className="pointer-events-none -mt-6 w-4/5 h-14 rounded-full blur-2xl opacity-60 transition-opacity duration-700"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(201, 58, 42, 0.4) 0%, rgba(0,0,0,0.85) 70%, transparent 100%)",
+              }}
+            />
+          </div>
+
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

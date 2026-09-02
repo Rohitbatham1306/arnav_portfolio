@@ -45,8 +45,8 @@ function VimeoBackdrop({
         draggable={false}
       />
 
-      {/* Vimeo background player — autoplays muted, no UI */}
-      {mountVideo && (
+      {/* Vimeo background player — autoplays muted, only if valid video ID exists */}
+      {mountVideo && item.vimeoId && item.vimeoId !== "000000000" && (
         <iframe
           src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1&dnt=1`}
           loading="lazy"

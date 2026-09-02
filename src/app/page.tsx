@@ -35,8 +35,8 @@ export default function Home() {
       </section>
       <ShowReel />
 
-      {/* About Scroll Section */}
-      <section id="about" className="">
+      {/* About Section */}
+      <section id="about" className="w-full scroll-mt-24">
         <AboutScrollSection />
       </section>
 

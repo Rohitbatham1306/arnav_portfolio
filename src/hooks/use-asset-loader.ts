@@ -20,8 +20,8 @@ export function useAssetLoader() {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    const MIN_MS = 2200; // let the greeting animation breathe
-    const MAX_MS = 9000; // never hold the site hostage to a slow asset
+    const MIN_MS = 1200; // smooth intro animation
+    const MAX_MS = 2800; // safety cap so slow external assets never hang the page
     const start = performance.now();
 
     let realDone = false;
