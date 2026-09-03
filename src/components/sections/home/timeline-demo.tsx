@@ -85,6 +85,41 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
   );
 };
 
+interface ImageCardProps {
+  src: string;
+  title: string;
+  aspect?: string;
+  className?: string;
+}
+
+const ImageCard: React.FC<ImageCardProps> = ({
+  src,
+  title,
+  aspect = "aspect-[16/10]",
+  className = "",
+}) => {
+  return (
+    <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 ${className}`}>
+      <div className={`relative w-full ${aspect} overflow-hidden bg-neutral-950`}>
+        <img
+          src={src}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+        {/* Title bar */}
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10">
+          <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
+            {title}
+          </span>
+        </div>
+      </div>
+    </FeatureCard>
+  );
+};
+
 export function TimelineDemo() {
   const data = [
     {
@@ -97,21 +132,25 @@ export function TimelineDemo() {
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="generative ai • ai films • ai commercials • ai visuals • ai storytelling" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-2">
+          <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Ai%20Transation.mp4"
-              title="AI World Transition Film"
-              aspect="aspect-[16/10]"
-              className="lg:col-span-2"
-            />
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(1).mp4"
-              title="AI Banana Concept 01"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4%20(1).mp4"
+              title="AI Creative Direction 01"
               aspect="aspect-[16/10]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(2).mp4"
-              title="AI Banana Concept 02"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/5%20(1).mp4"
+              title="AI Creative Direction 02"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/6%20(1).mp4"
+              title="AI Creative Direction 03"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
+              title="AI Creative Direction 04"
               aspect="aspect-[16/10]"
             />
           </div>
@@ -128,40 +167,55 @@ export function TimelineDemo() {
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="campaigns • art direction • brand concepts • creative strategy • visual communication" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-2">
+          <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Coco%20cola%20UGC.mp4"
-              title="Coca-Cola UGC Brand Campaign"
-              aspect="aspect-[16/10]"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(1).mp4"
+              title="Banana AI Concept 01"
+              aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1%20(1).MP4"
-              title="Commercial Cinematic Spot"
-              aspect="aspect-[16/10]"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(2).mp4"
+              title="Banana AI Concept 02"
+              aspect="aspect-[9/16]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA.mp4"
+              title="Banana Viral 3D Reel"
+              aspect="aspect-[9/16]"
             />
           </div>
         </div>
       ),
     },
     {
-      title: "03. Social, UGC & Influencer Marketing",
+      title: "03. Mentorship & Training",
       content: (
         <div>
           <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-            <PhraseAnimation phrase="High-Engagement Viral Content & Reels" />
+            <PhraseAnimation phrase="Mentorship & Training" />
           </h3>
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
-            <PhraseAnimation phrase="social campaigns • reels • ugc • influencer content • content strategy" />
+            <PhraseAnimation phrase="Mentorship • Workshops • Training" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-2">
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA.mp4"
-              title="Banana Viral 3D Motion Reel"
+          <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/1.jpeg"
+              title="Mentorship Session 01"
               aspect="aspect-[16/10]"
             />
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
-              title="Social Campaign Creative"
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/2.jpeg"
+              title="Mentorship Session 02"
+              aspect="aspect-[16/10]"
+            />
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/3.jpeg"
+              title="Workshop & Training 03"
+              aspect="aspect-[16/10]"
+            />
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/5.jpeg"
+              title="AI Masterclass 04"
               aspect="aspect-[16/10]"
             />
           </div>
@@ -169,7 +223,7 @@ export function TimelineDemo() {
       ),
     },
     {
-      title: "04. Film & Production",
+      title: "04. Production Work",
       content: (
         <div>
           <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
@@ -178,15 +232,25 @@ export function TimelineDemo() {
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="commercials • brand films • video production • photography • editing • 3d" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-2">
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3%20(1).MP4"
-              title="Brand Film & Visual Edit"
+          <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1.jpeg"
+              title="Production Visual Concept 01"
               aspect="aspect-[16/10]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4%20(1).mp4"
-              title="3D Production Showcase"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
+              title="Production Reel 02"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3.mp4"
+              title="Production Reel 03"
+              aspect="aspect-[16/10]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4.mp4"
+              title="Production Showcase 04"
               aspect="aspect-[16/10]"
             />
           </div>
