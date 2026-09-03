@@ -17,7 +17,7 @@ export const showRealData: showReelI[] = [
     title: "AI Creative Direction",
     category: "01. AI Creative Direction ⭐",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Ai%20Transation.mp4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4%20(1).mp4",
     thumbnail: "/portfolio/banner-1.png",
     stats: {
       views: 345000,
@@ -27,10 +27,10 @@ export const showRealData: showReelI[] = [
     },
   },
   {
-    title: "Coca-Cola UGC Campaign",
-    category: "02. Creative & Advertising",
+    title: "CGI Reel Works",
+    category: "02. CGI & 3D Visuals",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Coco%20cola%20UGC.mp4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Cgi%20reel%20works.mp4",
     thumbnail: "/portfolio/image-2.png",
     stats: {
       views: 520000,
@@ -40,10 +40,10 @@ export const showRealData: showReelI[] = [
     },
   },
   {
-    title: "Banana Viral 3D Reel",
-    category: "03. Social, UGC & Influencer",
+    title: "Pardesi X Arnav",
+    category: "03. Film & Direction",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA.mp4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Pardesi%20X%20Arnav.mp4",
     thumbnail:
       "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop",
     stats: {
@@ -54,10 +54,10 @@ export const showRealData: showReelI[] = [
     },
   },
   {
-    title: "Cinematic Film & Motion",
-    category: "04. Film & Production",
+    title: "Mehman Production",
+    category: "04. Creative Production",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1%20(1).MP4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mehman.mp4",
     thumbnail:
       "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1920&auto=format&fit=crop",
     stats: {
@@ -68,10 +68,10 @@ export const showRealData: showReelI[] = [
     },
   },
   {
-    title: "Experiential Brand Activation",
-    category: "05. Experiential & Event Production",
+    title: "Delgro Animated Video",
+    category: "05. Motion & Animation",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3%20(1).MP4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Delgro%20Animated%20Video.mp4",
     thumbnail:
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop",
     stats: {
@@ -82,10 +82,10 @@ export const showRealData: showReelI[] = [
     },
   },
   {
-    title: "Creative Tech & AI Automation",
-    category: "06. Creative Technology",
+    title: "ELIE SAAB Launch",
+    category: "06. Experiential & Event Launch",
     videoUrl:
-      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/7.mp4",
+      "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/ELIE%20SAAB%20LAUNCH.mp4",
     thumbnail: "/portfolio/banner-1.png",
     stats: {
       views: 630000,

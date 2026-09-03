@@ -1,12 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, Heart, MessageCircle, Repeat2 } from "lucide-react";
 import type { showReelI } from "@/data/show-reel";
 import { CARD_VARIANTS } from "./constants";
 import { padIndex } from "./utils";
 import { ScrambleText } from "./scramble-text";
-import { StatChip } from "./stat-chip";
 
 interface ReelCardProps {
   item: showReelI;
@@ -17,7 +15,7 @@ interface ReelCardProps {
 }
 
 /**
- * HUD-only overlay — title, stats, watermark, navigation indicators.
+ * HUD-only overlay — title, watermark, navigation indicators.
  * Video playback is handled by a separate persistent layer in the parent
  * so iframes are never destroyed on slide transitions.
  */
@@ -110,38 +108,6 @@ export function ReelCard({
               className="whitespace-nowrap"
             />
           </h3>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="flex flex-wrap gap-2"
-          >
-            <StatChip
-              icon={Eye}
-              value={item.stats.views}
-              label="views"
-              trigger
-            />
-            <StatChip
-              icon={Heart}
-              value={item.stats.likes}
-              label="likes"
-              trigger
-            />
-            <StatChip
-              icon={MessageCircle}
-              value={item.stats.comments}
-              label="comments"
-              trigger
-            />
-            <StatChip
-              icon={Repeat2}
-              value={item.stats.repost}
-              label="reposts"
-              trigger
-            />
-          </motion.div>
         </div>
       </div>
     </motion.div>

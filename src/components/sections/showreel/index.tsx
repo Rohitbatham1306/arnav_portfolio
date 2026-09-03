@@ -7,27 +7,55 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import { showRealData, type showReelI } from "@/data/show-reel";
 import { Grain } from "./grain";
 import { ReelCard } from "./reel-card";
 import { VideoModal } from "./video-modal";
 
 /**
- * Persistent Vimeo backdrop for a single slide.
+ * Persistent Video backdrop for a single slide.
  * Mounted once and never destroyed — only opacity toggles.
  */
 function VimeoBackdrop({
   item,
   isActive,
   mountVideo,
+  isMuted,
+  onVideoEnded,
 }: {
   item: showReelI;
   isActive: boolean;
-  /** When false we render only the thumbnail — no iframe. On phones we pass
-   *  false for non-active slides so at most one Vimeo player is ever alive. */
   mountVideo: boolean;
+  isMuted: boolean;
+  onVideoEnded?: () => void;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Strictly control audio & playback state for active vs inactive slides
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    if (isActive) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.muted = isMuted;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If browser blocked unmuted autoplay on load, fallback to muted autoplay
+          if (videoRef.current && !videoRef.current.muted) {
+            videoRef.current.muted = true;
+            videoRef.current.play().catch(() => {});
+          }
+        });
+      }
+    } else {
+      // Inactive slide: pause playback and mute audio immediately
+      videoRef.current.pause();
+      videoRef.current.muted = true;
+    }
+  }, [isActive, isMuted]);
+
   return (
     <div
       className="absolute inset-0 pointer-events-none"
@@ -45,21 +73,25 @@ function VimeoBackdrop({
         draggable={false}
       />
 
-      {/* Direct HTML5 Video player or Vimeo background player */}
+      {/* Direct HTML5 Video player with audio support strictly on active slide */}
       {mountVideo && item.videoUrl && (
         <video
+          ref={videoRef}
           src={item.videoUrl}
-          autoPlay
-          loop
-          muted
           playsInline
+          muted={!isActive || isMuted}
+          onEnded={() => {
+            if (isActive && onVideoEnded) {
+              onVideoEnded();
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover"
         />
       )}
 
       {mountVideo && !item.videoUrl && item.vimeoId && item.vimeoId !== "000000000" && (
         <iframe
-          src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1&dnt=1`}
+          src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=${isActive ? 1 : 0}&loop=1&muted=${isActive && !isMuted ? 0 : 1}&dnt=1`}
           loading="lazy"
           style={{
             position: "absolute",
@@ -88,8 +120,8 @@ export default function ShowReel() {
   const [locked, setLocked] = useState(false);
   const [modal, setModal] = useState<showReelI | null>(null);
   const [cursorVisible, setCursorVisible] = useState(false);
-  const [lastNav, setLastNav] = useState(0);
   const [isTouch, setIsTouch] = useState(false);
+  const [isMuted, setIsMuted] = useState(false); // Live sound enabled by default
 
   const lockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
@@ -99,6 +131,19 @@ export default function ShowReel() {
   // Detect touch / coarse-pointer devices → hide the custom play cursor
   useEffect(() => {
     setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  // Unmute on first user gesture if browser blocked unmuted autoplay initially
+  useEffect(() => {
+    const handleGesture = () => {
+      setIsMuted(false);
+    };
+    window.addEventListener("click", handleGesture, { once: true });
+    window.addEventListener("touchstart", handleGesture, { once: true });
+    return () => {
+      window.removeEventListener("click", handleGesture);
+      window.removeEventListener("touchstart", handleGesture);
+    };
   }, []);
 
   // Which slide indices should have their iframes mounted (current + adjacent)
@@ -116,30 +161,25 @@ export default function ShowReel() {
   const springX = useSpring(cursorX, { stiffness: 500, damping: 40 });
   const springY = useSpring(cursorY, { stiffness: 500, damping: 40 });
 
-  // 10-second autoplay — pauses while modal is open, resets on manual nav
-  useEffect(() => {
-    if (modal) return;
-    const id = setInterval(() => {
-      setDir(1);
-      setActive((prev) => (prev + 1) % total);
-    }, 10000);
-    return () => clearInterval(id);
-  }, [modal, total, lastNav]);
-
   const navigate = useCallback(
     (step: number) => {
       if (locked) return;
-      const next = active + step;
-      if (next < 0 || next >= total) return;
+      const next = (active + step + total) % total;
       setDir(step);
       setActive(next);
-      setLastNav(Date.now());
       setLocked(true);
       if (lockTimer.current) clearTimeout(lockTimer.current);
       lockTimer.current = setTimeout(() => setLocked(false), 700);
     },
     [active, locked, total],
   );
+
+  // Auto-advance to next video when full length video finishes
+  const handleVideoEnded = useCallback(() => {
+    if (modal) return;
+    setDir(1);
+    setActive((prev) => (prev + 1) % total);
+  }, [modal, total]);
 
   // Drag / swipe to move to the previous or next reel
   const handleDragStart = useCallback(
@@ -204,13 +244,38 @@ export default function ShowReel() {
         }}
         onMouseLeave={() => setCursorVisible(false)}
       >
-        {/* ── PERSISTENT VIDEO BACKDROPS ──
-            Current + adjacent slides stay mounted so their iframes never reload.
-            Only opacity toggles on transition → instant video swap. */}
+        {/* ── SOUND TOGGLE BUTTON (TOP RIGHT HUD) ── */}
+        <div className="absolute top-7 right-8 md:right-14 z-30 flex items-center gap-3">
+          <motion.button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMuted((prev) => !prev);
+            }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-colors hover:bg-white/15 cursor-pointer select-none"
+          >
+            {isMuted ? (
+              <>
+                <VolumeX size={15} className="text-white/60" />
+                <span className="font-mono text-[10px] font-semibold tracking-wider text-white/60 uppercase">
+                  Sound Off
+                </span>
+              </>
+            ) : (
+              <>
+                <Volume2 size={15} className="text-red-500 animate-pulse" />
+                <span className="font-mono text-[10px] font-semibold tracking-wider text-white uppercase">
+                  Sound On
+                </span>
+              </>
+            )}
+          </motion.button>
+        </div>
+
+        {/* ── PERSISTENT VIDEO BACKDROPS ── */}
         {showRealData.map((item, i) => {
           if (!mountedIndices.has(i)) return null;
-          // Desktop pre-mounts neighbors for an instant swap; touch devices
-          // keep only the active player alive to avoid 3 concurrent iframes.
           const mountVideo = isTouch ? i === active : true;
           return (
             <VimeoBackdrop
@@ -218,6 +283,8 @@ export default function ShowReel() {
               item={item}
               isActive={i === active}
               mountVideo={mountVideo}
+              isMuted={isMuted}
+              onVideoEnded={handleVideoEnded}
             />
           );
         })}
@@ -268,10 +335,9 @@ export default function ShowReel() {
               e.stopPropagation();
               navigate(-1);
             }}
-            disabled={active === 0}
-            whileHover={active === 0 ? {} : { scale: 1.1 }}
-            whileTap={active === 0 ? {} : { scale: 0.92 }}
-            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-colors hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-25"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.92 }}
+            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-colors hover:bg-white/15 cursor-pointer"
           >
             <ChevronLeft size={18} />
           </motion.button>
@@ -285,7 +351,6 @@ export default function ShowReel() {
                   if (i !== active) {
                     setDir(i > active ? 1 : -1);
                     setActive(i);
-                    setLastNav(Date.now());
                   }
                 }}
                 animate={{
@@ -293,7 +358,7 @@ export default function ShowReel() {
                   opacity: i === active ? 1 : 0.35,
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="h-1.5 rounded-full bg-white"
+                className="h-1.5 rounded-full bg-white cursor-pointer"
               />
             ))}
           </div>
@@ -303,10 +368,9 @@ export default function ShowReel() {
               e.stopPropagation();
               navigate(1);
             }}
-            disabled={active === total - 1}
-            whileHover={active === total - 1 ? {} : { scale: 1.1 }}
-            whileTap={active === total - 1 ? {} : { scale: 0.92 }}
-            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-colors hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-25"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.92 }}
+            className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-colors hover:bg-white/15 cursor-pointer"
           >
             <ChevronRight size={18} />
           </motion.button>
