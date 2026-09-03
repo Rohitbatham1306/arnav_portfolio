@@ -232,51 +232,61 @@ export function TimelineDemo() {
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="commercials • brand films • video production • photography • editing • 3d" />
           </p>
-          <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
+          <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1.jpeg"
               title="Production Visual Concept 01"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
               title="Production Reel 02"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3.mp4"
               title="Production Reel 03"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4.mp4"
               title="Production Showcase 04"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
             />
           </div>
         </div>
       ),
     },
     {
-      title: "05. Experiential & Event Production",
+      title: "05. Tech Help",
       content: (
         <div>
           <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-            <PhraseAnimation phrase="Brand Activations & On-Ground Experiences" />
+            <PhraseAnimation phrase="Tech Help & Creative Tech Solutions" />
           </h3>
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
-            <PhraseAnimation phrase="brand activations • events • installations • kiosks • on-ground experiences" />
+            <PhraseAnimation phrase="tech support • creative tech • digital workflows • automation • technical guidance" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-2">
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/5%20(1).mp4"
-              title="Experiential Activation 01"
-              aspect="aspect-[16/10]"
+          <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/1.jpeg"
+              title="Tech Help Visual 01"
+              aspect="aspect-[9/16]"
+            />
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/2.jpeg"
+              title="Tech Help Visual 02"
+              aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/6%20(1).mp4"
-              title="Event Installation 02"
-              aspect="aspect-[16/10]"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/3%20(2).mp4"
+              title="Tech Help Demo 03"
+              aspect="aspect-[9/16]"
+            />
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/4%20(2).mp4"
+              title="Tech Help Showcase 04"
+              aspect="aspect-[9/16]"
             />
           </div>
         </div>
