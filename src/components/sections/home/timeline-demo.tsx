@@ -23,6 +23,13 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
 
+  // Set default audio volume to 40% across all systems
+  React.useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = 0.4;
+    }
+  }, []);
+
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!videoRef.current) return;
@@ -30,7 +37,8 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
       videoRef.current.pause();
       setIsPlaying(false);
     } else {
-      videoRef.current.play();
+      videoRef.current.volume = 0.4;
+      videoRef.current.play().catch(() => {});
       setIsPlaying(true);
     }
   };
@@ -38,13 +46,20 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
+    const nextMuted = !isMuted;
+    videoRef.current.muted = nextMuted;
+    videoRef.current.volume = 0.4;
+    setIsMuted(nextMuted);
   };
 
   return (
-    <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 ${className}`}>
-      <div className={`relative w-full ${aspect} overflow-hidden bg-neutral-950`}>
+    <FeatureCard
+      className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 hover:border-white/20 transition-colors cursor-pointer ${className}`}
+    >
+      <div
+        onClick={togglePlay}
+        className={`relative w-full ${aspect} overflow-hidden bg-neutral-950 select-none`}
+      >
         <video
           ref={videoRef}
           src={src}
@@ -52,28 +67,40 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
           loop
           muted={isMuted}
           playsInline
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onLoadedMetadata={(e) => {
+            e.currentTarget.volume = 0.4;
+          }}
+          className="w-full h-full object-cover transition-opacity duration-300"
         />
 
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+        {/* Play/Pause state center indicator overlay when paused */}
+        {!isPlaying && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity pointer-events-none">
+            <div className="p-3.5 rounded-full bg-white/20 border border-white/30 text-white">
+              <Play size={24} className="translate-x-0.5" />
+            </div>
+          </div>
+        )}
 
         {/* Title and control bar */}
         <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10">
           <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
             {title}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={toggleMute}
-              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors"
+              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
-              {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} className="text-red-400 animate-pulse" />}
             </button>
             <button
               onClick={togglePlay}
-              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors"
+              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? <Pause size={14} /> : <Play size={14} />}
@@ -101,12 +128,12 @@ const ImageCard: React.FC<ImageCardProps> = ({
   imgClassName = "",
 }) => {
   return (
-    <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 ${className}`}>
+    <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 hover:border-white/20 transition-colors ${className}`}>
       <div className={`relative w-full ${aspect} overflow-hidden bg-neutral-950`}>
         <img
           src={src}
           alt={title}
-          className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${imgClassName}`}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${imgClassName}`}
         />
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
@@ -308,22 +335,15 @@ export function TimelineDemo() {
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/IMG_2442.PNG"
               title="Award Felicitation & Industry Honor"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
               imgClassName="object-top"
             />
             <ImageCard
               src="/awards/IMG_9386.webp"
               title="Digitopia Keynote & Recognition Session"
-              aspect="aspect-[16/10]"
+              aspect="aspect-[9/16]"
               imgClassName="object-center"
             />
-            <div className="lg:col-span-2">
-              <VideoPlayerCard
-                src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/7.mp4"
-                title="Creative Tech & Automation Flow"
-                aspect="aspect-[21/9]"
-              />
-            </div>
           </div>
         </div>
       ),

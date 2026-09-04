@@ -35,10 +35,12 @@ function VimeoBackdrop({
   // Strictly control audio & playback state for active vs inactive slides
   useEffect(() => {
     if (!videoRef.current) return;
+    videoRef.current.volume = 0.4;
 
     if (isActive) {
       videoRef.current.currentTime = 0;
       videoRef.current.muted = isMuted;
+      videoRef.current.volume = 0.4;
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
@@ -80,6 +82,9 @@ function VimeoBackdrop({
           src={item.videoUrl}
           playsInline
           muted={!isActive || isMuted}
+          onLoadedMetadata={(e) => {
+            e.currentTarget.volume = 0.4;
+          }}
           onEnded={() => {
             if (isActive && onVideoEnded) {
               onVideoEnded();
