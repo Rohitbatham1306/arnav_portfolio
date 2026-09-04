@@ -196,21 +196,21 @@ export function TimelineDemo() {
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="campaigns • art direction • brand concepts • creative strategy • visual communication" />
           </p>
-          <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
+          <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl">
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(1).mp4"
               title="Banana AI Concept 01"
-              aspect="aspect-[9/16]"
+              aspect="aspect-[4/5]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA%20(2).mp4"
               title="Banana AI Concept 02"
-              aspect="aspect-[9/16]"
+              aspect="aspect-[4/5]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/BANANA.mp4"
               title="Banana Viral 3D Reel"
-              aspect="aspect-[9/16]"
+              aspect="aspect-[4/5]"
             />
           </div>
         </div>
