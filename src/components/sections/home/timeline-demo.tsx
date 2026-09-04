@@ -178,7 +178,7 @@ export function TimelineDemo() {
               aspect="aspect-[16/10]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3%20(1).MP4"
               title="AI Creative Direction 04"
               aspect="aspect-[16/10]"
             />

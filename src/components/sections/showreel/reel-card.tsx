@@ -11,20 +11,21 @@ interface ReelCardProps {
   index: number;
   total: number;
   direction: number;
-  onOpen: () => void;
+  isPlaying?: boolean;
+  onTogglePlay: () => void;
 }
 
 /**
  * HUD-only overlay — title, watermark, navigation indicators.
  * Video playback is handled by a separate persistent layer in the parent
- * so iframes are never destroyed on slide transitions.
+ * so iframes/videos are never destroyed on slide transitions.
  */
 export function ReelCard({
   item,
   index,
   total,
   direction,
-  onOpen,
+  onTogglePlay,
 }: ReelCardProps) {
   return (
     <motion.div
@@ -35,7 +36,7 @@ export function ReelCard({
       animate="active"
       exit="exit"
       className="absolute inset-0 z-10 cursor-none"
-      onClick={onOpen}
+      onClick={onTogglePlay}
     >
       {/* Ghost index watermark */}
       <motion.span

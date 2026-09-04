@@ -7,11 +7,10 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause } from "lucide-react";
 import { showRealData, type showReelI } from "@/data/show-reel";
 import { Grain } from "./grain";
 import { ReelCard } from "./reel-card";
-import { VideoModal } from "./video-modal";
 
 /**
  * Persistent Video backdrop for a single slide.
@@ -20,43 +19,49 @@ import { VideoModal } from "./video-modal";
 function VimeoBackdrop({
   item,
   isActive,
+  isPlaying,
   mountVideo,
   isMuted,
   onVideoEnded,
 }: {
   item: showReelI;
   isActive: boolean;
+  isPlaying: boolean;
   mountVideo: boolean;
   isMuted: boolean;
   onVideoEnded?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Strictly control audio & playback state for active vs inactive slides
+  // Strictly control audio & playback state for active vs inactive slides and play/pause
   useEffect(() => {
     if (!videoRef.current) return;
     videoRef.current.volume = 0.4;
 
     if (isActive) {
-      videoRef.current.currentTime = 0;
       videoRef.current.muted = isMuted;
       videoRef.current.volume = 0.4;
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If browser blocked unmuted autoplay on load, fallback to muted autoplay
-          if (videoRef.current && !videoRef.current.muted) {
-            videoRef.current.muted = true;
-            videoRef.current.play().catch(() => {});
-          }
-        });
+
+      if (isPlaying) {
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // If browser blocked unmuted autoplay on load, fallback to muted autoplay
+            if (videoRef.current && !videoRef.current.muted) {
+              videoRef.current.muted = true;
+              videoRef.current.play().catch(() => {});
+            }
+          });
+        }
+      } else {
+        videoRef.current.pause();
       }
     } else {
       // Inactive slide: pause playback and mute audio immediately
       videoRef.current.pause();
       videoRef.current.muted = true;
     }
-  }, [isActive, isMuted]);
+  }, [isActive, isPlaying, isMuted]);
 
   return (
     <div
@@ -81,6 +86,7 @@ function VimeoBackdrop({
           ref={videoRef}
           src={item.videoUrl}
           playsInline
+          loop
           muted={!isActive || isMuted}
           onLoadedMetadata={(e) => {
             e.currentTarget.volume = 0.4;
@@ -96,7 +102,7 @@ function VimeoBackdrop({
 
       {mountVideo && !item.videoUrl && item.vimeoId && item.vimeoId !== "000000000" && (
         <iframe
-          src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=${isActive ? 1 : 0}&loop=1&muted=${isActive && !isMuted ? 0 : 1}&dnt=1`}
+          src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=${isActive && isPlaying ? 1 : 0}&loop=1&muted=${isActive && !isMuted ? 0 : 1}&dnt=1`}
           loading="lazy"
           style={{
             position: "absolute",
@@ -123,7 +129,7 @@ export default function ShowReel() {
   const [active, setActive] = useState(0);
   const [dir, setDir] = useState(1);
   const [locked, setLocked] = useState(false);
-  const [modal, setModal] = useState<showReelI | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [cursorVisible, setCursorVisible] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Live sound enabled by default
@@ -172,6 +178,7 @@ export default function ShowReel() {
       const next = (active + step + total) % total;
       setDir(step);
       setActive(next);
+      setIsPlaying(true);
       setLocked(true);
       if (lockTimer.current) clearTimeout(lockTimer.current);
       lockTimer.current = setTimeout(() => setLocked(false), 700);
@@ -181,24 +188,29 @@ export default function ShowReel() {
 
   // Auto-advance to next video when full length video finishes
   const handleVideoEnded = useCallback(() => {
-    if (modal) return;
     setDir(1);
     setActive((prev) => (prev + 1) % total);
-  }, [modal, total]);
+    setIsPlaying(true);
+  }, [total]);
+
+  // Toggle inline play/pause
+  const togglePlay = useCallback(() => {
+    if (suppressClick.current) return;
+    setIsPlaying((prev) => !prev);
+  }, []);
 
   // Drag / swipe to move to the previous or next reel
   const handleDragStart = useCallback(
     (e: React.PointerEvent) => {
-      if (modal) return;
       suppressClick.current = false;
       dragStart.current = { x: e.clientX, y: e.clientY };
     },
-    [modal],
+    [],
   );
 
   const handleDragEnd = useCallback(
     (e: React.PointerEvent) => {
-      if (!dragStart.current || modal) return;
+      if (!dragStart.current) return;
       const dx = e.clientX - dragStart.current.x;
       const dy = e.clientY - dragStart.current.y;
       dragStart.current = null;
@@ -206,18 +218,21 @@ export default function ShowReel() {
       const SWIPE_THRESHOLD = 50;
       // Horizontal swipe wins → drag left = next, drag right = previous
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
-        suppressClick.current = true; // don't also open the modal on a swipe
+        suppressClick.current = true; // don't toggle play on swipe
         navigate(dx < 0 ? 1 : -1);
       }
     },
-    [modal, navigate],
+    [navigate],
   );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") navigate(1);
       if (e.key === "ArrowUp" || e.key === "ArrowLeft") navigate(-1);
-      if (e.key === "Escape") setModal(null);
+      if (e.key === " ") {
+        e.preventDefault();
+        setIsPlaying((prev) => !prev);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -227,26 +242,19 @@ export default function ShowReel() {
     <>
       <Grain />
 
-      {/* Shadcn-based fullscreen video modal */}
-      <VideoModal item={modal} onClose={() => setModal(null)} />
-
       <section
         className={`relative h-dvh md:h-screen w-full select-none overflow-hidden bg-black ${
-          modal || isTouch ? "cursor-auto" : "cursor-none"
+          isTouch ? "cursor-auto" : "cursor-none"
         }`}
         style={{ touchAction: "pan-y" }}
         aria-label="Show Reel"
         onPointerDown={handleDragStart}
         onPointerUp={handleDragEnd}
         onMouseMove={(e) => {
-          if (!modal) {
-            cursorX.set(e.clientX);
-            cursorY.set(e.clientY);
-          }
+          cursorX.set(e.clientX);
+          cursorY.set(e.clientY);
         }}
-        onMouseEnter={() => {
-          if (!modal) setCursorVisible(true);
-        }}
+        onMouseEnter={() => setCursorVisible(true)}
         onMouseLeave={() => setCursorVisible(false)}
       >
         {/* ── SOUND TOGGLE BUTTON (TOP RIGHT HUD) ── */}
@@ -287,6 +295,7 @@ export default function ShowReel() {
               key={`backdrop-${i}`}
               item={item}
               isActive={i === active}
+              isPlaying={isPlaying}
               mountVideo={mountVideo}
               isMuted={isMuted}
               onVideoEnded={handleVideoEnded}
@@ -294,31 +303,47 @@ export default function ShowReel() {
           );
         })}
 
-        {/* Custom play cursor — desktop / fine-pointer only */}
+        {/* Custom play/pause cursor — desktop / fine-pointer only */}
         {!isTouch && (
           <motion.div
             style={{ x: springX, y: springY }}
             animate={{
-              opacity: cursorVisible && !modal ? 1 : 0,
-              scale: cursorVisible && !modal ? 1 : 0.5,
+              opacity: cursorVisible ? 1 : 0,
+              scale: cursorVisible ? 1 : 0.5,
             }}
             transition={{
               opacity: { duration: 0.2 },
               scale: { duration: 0.2 },
             }}
-            className="pointer-events-none fixed left-0 top-0 z-9998 flex size-18 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-sm"
+            className="pointer-events-none fixed left-0 top-0 z-9998 flex size-18 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-sm shadow-2xl"
           >
-            <svg
-              viewBox="0 0 10 12"
-              className="h-4 w-3.5 translate-x-px fill-white"
-              aria-hidden
-            >
-              <polygon points="0,0 10,6 0,12" />
-            </svg>
+            {isPlaying ? (
+              <Pause size={18} className="text-white fill-white" />
+            ) : (
+              <Play size={18} className="text-white fill-white translate-x-0.5" />
+            )}
           </motion.div>
         )}
 
-        {/* Full-bleed cards */}
+        {/* Big subtle Center Play Indicator overlay when paused */}
+        <AnimatePresence>
+          {!isPlaying && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25 }}
+              onClick={togglePlay}
+              className="absolute inset-0 z-20 flex items-center justify-center bg-black/30 backdrop-blur-[2px] cursor-pointer"
+            >
+              <div className="flex size-20 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md shadow-2xl transition hover:scale-110">
+                <Play size={32} className="translate-x-0.5 fill-white" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Full-bleed HUD */}
         <AnimatePresence custom={dir} mode="wait">
           <ReelCard
             key={active}
@@ -326,10 +351,8 @@ export default function ShowReel() {
             index={active}
             total={total}
             direction={dir}
-            onOpen={() => {
-              if (suppressClick.current) return;
-              setModal(showRealData[active]);
-            }}
+            isPlaying={isPlaying}
+            onTogglePlay={togglePlay}
           />
         </AnimatePresence>
 
@@ -356,6 +379,7 @@ export default function ShowReel() {
                   if (i !== active) {
                     setDir(i > active ? 1 : -1);
                     setActive(i);
+                    setIsPlaying(true);
                   }
                 }}
                 animate={{
