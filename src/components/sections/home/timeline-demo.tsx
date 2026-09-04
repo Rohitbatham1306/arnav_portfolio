@@ -90,6 +90,7 @@ interface ImageCardProps {
   title: string;
   aspect?: string;
   className?: string;
+  imgClassName?: string;
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({
@@ -97,6 +98,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
   title,
   aspect = "aspect-[16/10]",
   className = "",
+  imgClassName = "",
 }) => {
   return (
     <FeatureCard className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 ${className}`}>
@@ -104,7 +106,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
         <img
           src={src}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${imgClassName}`}
         />
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
@@ -293,21 +295,35 @@ export function TimelineDemo() {
       ),
     },
     {
-      title: "06. Creative Technology & AI Automation",
+      title: "06. Awards & Recognition",
       content: (
         <div>
           <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
-            <PhraseAnimation phrase="AI Workflows & Marketing Automation" />
+            <PhraseAnimation phrase="Awards & Recognition" />
           </h3>
           <p className="mb-6 text-xs text-muted-foreground md:text-base mt-1.5 font-mono">
             <PhraseAnimation phrase="ai workflows • marketing automation • digital experiences • creative-tech solutions" />
           </p>
-          <div className="mx-auto grid gap-4 lg:grid-cols-1">
-            <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/7.mp4"
-              title="Creative Tech & Automation Flow"
-              aspect="aspect-[21/9]"
+          <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
+            <ImageCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/IMG_2442.PNG"
+              title="Award Felicitation & Industry Honor"
+              aspect="aspect-[16/10]"
+              imgClassName="object-top"
             />
+            <ImageCard
+              src="/awards/IMG_9386.webp"
+              title="Digitopia Keynote & Recognition Session"
+              aspect="aspect-[16/10]"
+              imgClassName="object-center"
+            />
+            <div className="lg:col-span-2">
+              <VideoPlayerCard
+                src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/7.mp4"
+                title="Creative Tech & Automation Flow"
+                aspect="aspect-[21/9]"
+              />
+            </div>
           </div>
         </div>
       ),
