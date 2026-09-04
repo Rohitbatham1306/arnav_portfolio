@@ -69,28 +69,6 @@ export function ReelCard({
             Show Reel
           </motion.h2>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.24 }}
-          className="flex items-center gap-2 pt-1"
-        >
-          <span className="mr-2 font-mono text-[10px] font-semibold tracking-[0.3em] text-white/35 uppercase">
-            {padIndex(index)} / {padIndex(total - 1)}
-          </span>
-          {Array.from({ length: total }).map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                scaleX: i === index ? 1 : 0.5,
-                opacity: i === index ? 1 : 0.2,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="h-[2px] w-8 origin-left rounded-full bg-white"
-            />
-          ))}
-        </motion.div>
       </div>
 
       {/* ── BOTTOM HUD ── */}

@@ -4,8 +4,6 @@ import React, { useRef, useState } from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { FeatureCard } from "./features";
 import PhraseAnimation from "@/components/common/phrase-reveal";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
-
 interface VideoPlayerCardProps {
   src: string;
   title: string;
@@ -20,44 +18,26 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
   className = "",
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
 
-  // Set default audio volume to 40% across all systems
-  React.useEffect(() => {
+  const handleMouseEnter = () => {
     if (videoRef.current) {
-      videoRef.current.volume = 0.4;
-    }
-  }, []);
-
-  const togglePlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    if (isPlaying) {
       videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.volume = 0.4;
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
     }
   };
 
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    const nextMuted = !isMuted;
-    videoRef.current.muted = nextMuted;
-    videoRef.current.volume = 0.4;
-    setIsMuted(nextMuted);
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
   };
 
   return (
     <FeatureCard
-      className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 hover:border-white/20 transition-colors cursor-pointer ${className}`}
+      className={`group relative p-0 overflow-hidden w-full bg-black rounded-xl border border-white/10 hover:border-white/20 transition-colors ${className}`}
     >
       <div
-        onClick={togglePlay}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={`relative w-full ${aspect} overflow-hidden bg-neutral-950 select-none`}
       >
         <video
@@ -65,47 +45,19 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
           src={src}
           autoPlay
           loop
-          muted={isMuted}
+          muted
           playsInline
-          onLoadedMetadata={(e) => {
-            e.currentTarget.volume = 0.4;
-          }}
           className="w-full h-full object-cover transition-opacity duration-300"
         />
 
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
 
-        {/* Play/Pause state center indicator overlay when paused */}
-        {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity pointer-events-none">
-            <div className="p-3.5 rounded-full bg-white/20 border border-white/30 text-white">
-              <Play size={24} className="translate-x-0.5" />
-            </div>
-          </div>
-        )}
-
-        {/* Title and control bar */}
-        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10">
+        {/* Title bar */}
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10 pointer-events-none">
           <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
             {title}
           </span>
-          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={toggleMute}
-              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} className="text-red-400 animate-pulse" />}
-            </button>
-            <button
-              onClick={togglePlay}
-              className="p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-white/80 hover:text-white transition-colors cursor-pointer"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-            </button>
-          </div>
         </div>
       </div>
     </FeatureCard>
@@ -333,7 +285,7 @@ export function TimelineDemo() {
           </p>
           <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <ImageCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/IMG_2442.PNG"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Certificate%20Presentation%20Group%20Photo.png"
               title="Award Felicitation & Industry Honor"
               aspect="aspect-[9/16]"
               imgClassName="object-top"
