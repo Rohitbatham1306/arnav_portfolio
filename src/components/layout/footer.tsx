@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import {
   FaBehance,
   FaInstagram,
@@ -12,7 +12,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa6";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { getCalApi } from "@calcom/embed-react";
+// Cal.com removed — Let's Talk now opens WhatsApp directly
 
 const SocialLink = ({
   href,
@@ -79,19 +79,9 @@ const MagneticButton = ({ children }: { children: React.ReactNode }) => {
 export default function CreativeFooter() {
   const currentYear = new Date().getFullYear();
 
-  useEffect(() => {
-    (async function () {
-      const cal = await getCalApi({ namespace: "30min" });
-      cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
-    })();
-  }, []);
-
-  const handleLetsTalkClick = async (e: React.MouseEvent) => {
+  const handleLetsTalkClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const cal = await getCalApi({ namespace: "30min" });
-    cal("modal", {
-      calLink: "your-username/30min",
-    });
+    window.open("https://wa.me/918770794033", "_blank", "noopener,noreferrer");
   };
 
   return (
