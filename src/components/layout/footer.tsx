@@ -158,7 +158,7 @@ export default function CreativeFooter() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="col-span-1 md:col-span-5 flex flex-col gap-6"
+            className="col-span-1 md:col-span-5 flex flex-col gap-4"
           >
             <Link href="/" className="flex w-fit items-center gap-3">
               <div className="relative size-12 overflow-hidden rounded-xl bg-linear-to-br from-background to-muted border border-border shadow-sm flex items-center justify-center">
@@ -175,8 +175,14 @@ export default function CreativeFooter() {
               </span>
             </Link>
             <p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
-              Gen AI Art Director + Marketing + Event Production + Technology.
+              Creative Director, Video Producer & Web Developer. Freelance services in video shoots, editing & web solutions.
             </p>
+            <div className="flex flex-col gap-1 text-xs text-muted-foreground font-mono">
+              <span>📍 Hyderabad, India • Worldwide</span>
+              <a href="mailto:arnav49@gmail.com" className="text-primary hover:underline w-fit">
+                arnav49@gmail.com
+              </a>
+            </div>
           </motion.div>
 
           {/* Navigation Links (Sitemap) */}
@@ -195,6 +201,11 @@ export default function CreativeFooter() {
               { label: "About", href: "#about" },
               { label: "Projects", href: "#projects" },
               { label: "Contact", href: "#contact" },
+              {
+                label: "Resume / CV",
+                href: "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Arnav_s%20CV-compressed%C2%A0(1)%20(1).pdf",
+                external: true,
+              },
             ].map((item, i) => (
               <motion.div
                 key={item.label}
@@ -207,12 +218,23 @@ export default function CreativeFooter() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
               >
-                <Link
-                  href={item.href}
-                  className="w-fit text-foreground/80 hover:text-primary hover:translate-x-1 transition-all duration-300"
-                >
-                  {item.label}
-                </Link>
+                {item.external ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-fit text-foreground/80 hover:text-primary hover:translate-x-1 transition-all duration-300 block"
+                  >
+                    {item.label} ↗
+                  </a>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="w-fit text-foreground/80 hover:text-primary hover:translate-x-1 transition-all duration-300 block"
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </motion.div>
             ))}
           </motion.div>

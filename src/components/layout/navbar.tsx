@@ -9,9 +9,14 @@ import { motion, useAnimate, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "Projects", href: "#projects", label: "Our Work" },
-  // { name: "Services", href: "#services", label: "What We Do" },
   { name: "Contact", href: "#contact", label: "Get In Touch" },
   { name: "About", href: "#about", label: "Who We Are" },
+  {
+    name: "Resume",
+    href: "https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Arnav_s%20CV-compressed%C2%A0(1)%20(1).pdf",
+    label: "View & Download CV",
+    external: true,
+  },
 ];
 
 const socialLinks = [
@@ -241,87 +246,173 @@ const Navbar: React.FC = () => {
                       onMouseEnter={() => setHoveredIndex(i)}
                       onMouseLeave={() => setHoveredIndex(null)}
                     >
-                      <Link
-                        href={link.href}
-                        onClick={handleToggle}
-                        className="group relative pr-6 flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-border/20 last:border-b-0"
-                      >
-                        {/* Number */}
-                        <motion.span
-                          className="text-xs md:text-sm font-mono text-muted-foreground/60 w-8 shrink-0"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{
-                            duration: 0.3,
-                            delay: i * 0.08 + 0.2,
-                          }}
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={handleToggle}
+                          className="group relative pr-6 flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-border/20 last:border-b-0"
                         >
-                          {String(i + 1).padStart(2, "0")}
-                        </motion.span>
-
-                        {/* Link text container */}
-                        <div className="flex-1 overflow-hidden ">
-                          <motion.div
-                            className="flex items-baseline gap-3"
-                            animate={{
-                              x: hoveredIndex === i ? 12 : 0,
-                            }}
+                          {/* Number */}
+                          <motion.span
+                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-8 shrink-0"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             transition={{
-                              duration: 0.4,
-                              ease: [0.22, 1, 0.36, 1],
+                              duration: 0.3,
+                              delay: i * 0.08 + 0.2,
                             }}
                           >
-                            <span className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
-                              {link.name}
-                            </span>
+                            {String(i + 1).padStart(2, "0")}
+                          </motion.span>
 
-                            {/* Sublabel - shows on hover */}
-                            <motion.span
-                              className="text-xs md:text-sm text-muted-foreground hidden md:inline-block"
-                              initial={{ opacity: 0, x: -10 }}
+                          {/* Link text container */}
+                          <div className="flex-1 overflow-hidden ">
+                            <motion.div
+                              className="flex items-baseline gap-3"
                               animate={{
-                                opacity: hoveredIndex === i ? 1 : 0,
-                                x: hoveredIndex === i ? 0 : -10,
+                                x: hoveredIndex === i ? 12 : 0,
                               }}
                               transition={{
-                                duration: 0.3,
+                                duration: 0.4,
                                 ease: [0.22, 1, 0.36, 1],
                               }}
                             >
-                              — {link.label}
-                            </motion.span>
+                              <span className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
+                                {link.name}
+                              </span>
+
+                              {/* Sublabel - shows on hover */}
+                              <motion.span
+                                className="text-xs md:text-sm text-muted-foreground hidden md:inline-block"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{
+                                  opacity: hoveredIndex === i ? 1 : 0,
+                                  x: hoveredIndex === i ? 0 : -10,
+                                }}
+                                transition={{
+                                  duration: 0.3,
+                                  ease: [0.22, 1, 0.36, 1],
+                                }}
+                              >
+                                — {link.label}
+                              </motion.span>
+                            </motion.div>
+                          </div>
+
+                          {/* Arrow */}
+                          <motion.div
+                            className="shrink-0"
+                            animate={{
+                              opacity: hoveredIndex === i ? 1 : 0.3,
+                              rotate: hoveredIndex === i ? 0 : -45,
+                              scale: hoveredIndex === i ? 1 : 0.7,
+                            }}
+                            transition={{
+                              duration: 0.3,
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
+                          >
+                            <ArrowUpRight className="h-5 w-5 md:h-6 md:w-6" />
                           </motion.div>
-                        </div>
 
-                        {/* Arrow */}
-                        <motion.div
-                          className="shrink-0"
-                          animate={{
-                            opacity: hoveredIndex === i ? 1 : 0.3,
-                            rotate: hoveredIndex === i ? 0 : -45,
-                            scale: hoveredIndex === i ? 1 : 0.7,
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
+                          {/* Hover highlight bar */}
+                          <motion.div
+                            className="absolute -left-4 top-0 bottom-0 w-[3px] bg-primary rounded-full origin-top"
+                            initial={{ scaleY: 0 }}
+                            animate={{
+                              scaleY: hoveredIndex === i ? 1 : 0,
+                            }}
+                            transition={{
+                              duration: 0.3,
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
+                          />
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          onClick={handleToggle}
+                          className="group relative pr-6 flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-border/20 last:border-b-0"
                         >
-                          <ArrowUpRight className="h-5 w-5 md:h-6 md:w-6" />
-                        </motion.div>
+                          {/* Number */}
+                          <motion.span
+                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-8 shrink-0"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: i * 0.08 + 0.2,
+                            }}
+                          >
+                            {String(i + 1).padStart(2, "0")}
+                          </motion.span>
 
-                        {/* Hover highlight bar */}
-                        <motion.div
-                          className="absolute -left-4 top-0 bottom-0 w-[3px] bg-primary rounded-full origin-top"
-                          initial={{ scaleY: 0 }}
-                          animate={{
-                            scaleY: hoveredIndex === i ? 1 : 0,
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                        />
-                      </Link>
+                          {/* Link text container */}
+                          <div className="flex-1 overflow-hidden ">
+                            <motion.div
+                              className="flex items-baseline gap-3"
+                              animate={{
+                                x: hoveredIndex === i ? 12 : 0,
+                              }}
+                              transition={{
+                                duration: 0.4,
+                                ease: [0.22, 1, 0.36, 1],
+                              }}
+                            >
+                              <span className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
+                                {link.name}
+                              </span>
+
+                              {/* Sublabel - shows on hover */}
+                              <motion.span
+                                className="text-xs md:text-sm text-muted-foreground hidden md:inline-block"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{
+                                  opacity: hoveredIndex === i ? 1 : 0,
+                                  x: hoveredIndex === i ? 0 : -10,
+                                }}
+                                transition={{
+                                  duration: 0.3,
+                                  ease: [0.22, 1, 0.36, 1],
+                                }}
+                              >
+                                — {link.label}
+                              </motion.span>
+                            </motion.div>
+                          </div>
+
+                          {/* Arrow */}
+                          <motion.div
+                            className="shrink-0"
+                            animate={{
+                              opacity: hoveredIndex === i ? 1 : 0.3,
+                              rotate: hoveredIndex === i ? 0 : -45,
+                              scale: hoveredIndex === i ? 1 : 0.7,
+                            }}
+                            transition={{
+                              duration: 0.3,
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
+                          >
+                            <ArrowUpRight className="h-5 w-5 md:h-6 md:w-6" />
+                          </motion.div>
+
+                          {/* Hover highlight bar */}
+                          <motion.div
+                            className="absolute -left-4 top-0 bottom-0 w-[3px] bg-primary rounded-full origin-top"
+                            initial={{ scaleY: 0 }}
+                            animate={{
+                              scaleY: hoveredIndex === i ? 1 : 0,
+                            }}
+                            transition={{
+                              duration: 0.3,
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
+                          />
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -344,12 +435,12 @@ const Navbar: React.FC = () => {
                       Let&apos;s Talk
                     </span>
                     <motion.a
-                      href="mailto:you@example.com"
-                      className="text-sm hover:text-primary transition-colors"
+                      href="mailto:arnav49@gmail.com"
+                      className="text-sm font-medium hover:text-primary transition-colors"
                       whileHover={{ x: 4 }}
                       transition={{ duration: 0.2 }}
                     >
-                      you@example.com
+                      arnav49@gmail.com
                     </motion.a>
                   </div>
 
@@ -389,7 +480,7 @@ const Navbar: React.FC = () => {
                     <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
                       Based In
                     </span>
-                    <span className="text-sm">India</span>
+                    <span className="text-sm font-medium">Hyderabad, India</span>
                     <span className="text-xs text-muted-foreground">
                       Available Worldwide
                     </span>

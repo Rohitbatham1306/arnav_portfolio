@@ -110,10 +110,11 @@ const AboutScrollSection = () => {
             transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="mb-6 text-sm leading-relaxed text-white/85 sm:text-base drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
           >
-            Gen AI Art Director + Marketing + Event Production + Technology.
-            Transforming brand narratives into cinematic experiences,
-            high-engagement visuals, and next-generation automated workflows. Built
-            on one simple rule: quality over quantity, always.
+            Creative Director, Video Producer & Web Developer based in{" "}
+            <span className="text-white font-semibold">Hyderabad, India</span>.
+            Providing high-end freelance services spanning commercial video shooting, ad shoots,
+            advanced video editing, 3D post-production, full-stack web development, and next-generation
+            Gen AI automated workflows.
           </motion.p>
 
           {/* Accent divider */}
@@ -128,7 +129,7 @@ const AboutScrollSection = () => {
             }}
           />
 
-          {/* Discipline chips */}
+          {/* Services & Discipline chips */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -137,16 +138,16 @@ const AboutScrollSection = () => {
             className="mb-7 flex flex-wrap items-center gap-2.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
           >
             {[
+              "FREELANCE SERVICES",
+              "VIDEO SHOOTING & AD SHOOTS",
+              "VIDEO EDITING & 3D",
+              "WEB DEVELOPMENT",
               "AI CREATIVE DIRECTION",
-              "CREATIVE & ADVERTISING",
-              "SOCIAL & INFLUENCER",
-              "FILM & PRODUCTION",
-              "EXPERIENTIAL",
-              "CREATIVE TECH",
+              "EVENT & COMMERCIAL PRODUCTION",
             ].map((discipline, i) => (
               <span
                 key={discipline}
-                className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/75"
+                className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/85 bg-white/5 px-2.5 py-1 rounded-md border border-white/10"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 {i !== 0 && (
@@ -160,21 +161,24 @@ const AboutScrollSection = () => {
             ))}
           </motion.div>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.95 }}
-            className="drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
+            className="flex flex-wrap items-center gap-4 text-xs font-mono text-white/90 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
           >
-            <span
-              className="text-xs uppercase tracking-[0.25em] text-white/90"
-              style={{ fontFamily: "'DM Mono', monospace" }}
-            >
-              HAPPY TO COLLABORATE
-            </span>{" "}
+            <span className="uppercase tracking-[0.25em]">
+              📍 Hyderabad, India • Available Worldwide
+            </span>
             <span style={{ color: redColor }}>✦</span>
-          </motion.p>
+            <a
+              href="mailto:arnav49@gmail.com"
+              className="text-primary hover:underline uppercase tracking-widest font-semibold"
+            >
+              arnav49@gmail.com
+            </a>
+          </motion.div>
         </motion.div>
       </div>
     </section>

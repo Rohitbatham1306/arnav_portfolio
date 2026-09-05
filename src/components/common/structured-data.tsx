@@ -4,39 +4,46 @@ export default function StructuredData() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Your Name",
+    name: "Arnav Roy",
     url: BASE_URL,
     image: OG_IMAGE,
+    email: "arnav49@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Hyderabad",
+      addressCountry: "India",
+    },
     description:
-      "Professional web developer and designer specializing in modern web technologies and creative digital solutions.",
-    jobTitle: "Web Developer & Designer",
+      "Creative Director, Video Producer & Web Developer based in Hyderabad, India. Specializing in video shoots, editing, 3D post-production, full-stack web development, and Gen AI workflows.",
+    jobTitle: "Creative Director, Video Producer & Web Developer",
     sameAs: [
-      // Add your social media profiles
-      "https://github.com/yourusername",
-      "https://linkedin.com/in/yourusername",
-      "https://twitter.com/yourhandle",
+      "https://www.instagram.com/iamfreakazo/",
+      "https://www.linkedin.com/in/arnav-roy-05337b187/",
+      "https://www.behance.net/arnavroy",
+      "https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3",
+      "https://discord.gg/dXU2Y36ZMT",
     ],
     knowsAbout: [
+      "Freelance Creative Direction",
+      "Video Shooting & Ad Shoots",
+      "Video Editing & 3D Post Production",
       "Web Development",
-      "Frontend Development",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "UI/UX Design",
-      "Full Stack Development",
+      "Next.js & React",
+      "Gen AI Visual Storytelling",
+      "Marketing Automation",
     ],
   };
 
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Your Name Portfolio",
+    name: "Arnav Roy Portfolio",
     url: BASE_URL,
     description:
-      "Professional portfolio showcasing web development, design, and digital solutions.",
+      "Arnav Roy — Creative Director, Video Producer & Web Developer based in Hyderabad, India.",
     author: {
       "@type": "Person",
-      name: "Your Name",
+      name: "Arnav Roy",
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -51,17 +58,18 @@ export default function StructuredData() {
   const organizationStructuredData = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "Your Name",
+    name: "Arnav Roy Creative & Tech Studio",
     image: `${BASE_URL}/md-red-logo.svg`,
     "@id": BASE_URL,
     url: BASE_URL,
+    email: "arnav49@gmail.com",
     telephone: "",
     address: {
       "@type": "PostalAddress",
       streetAddress: "",
-      addressLocality: "",
+      addressLocality: "Hyderabad",
       postalCode: "",
-      addressCountry: "",
+      addressCountry: "India",
     },
     priceRange: "$$",
     openingHoursSpecification: {

@@ -34,7 +34,7 @@ export function generateMetadata({
   type = 'website',
   publishedTime,
   modifiedTime,
-  author = 'Your Name',
+  author = 'Arnav Roy',
 }: SEOProps): Metadata {
   const baseUrl = BASE_URL
   const fullUrl = url ? `${baseUrl}${url}` : baseUrl
@@ -53,7 +53,7 @@ export function generateMetadata({
       url: fullUrl,
       title,
       description,
-      siteName: 'Your Name',
+      siteName: 'Arnav Roy',
       images: [
         {
           url: fullImage,
@@ -69,7 +69,7 @@ export function generateMetadata({
       card: 'summary_large_image',
       title,
       description,
-      creator: '@yourhandle',
+      creator: '@iamfreakazo',
       images: [fullImage],
     },
     alternates: {
@@ -89,7 +89,7 @@ export function generateArticleMetadata({
   keywords = [],
   publishedTime,
   modifiedTime,
-  author = 'Your Name',
+  author = 'Arnav Roy',
 }: SEOProps): Metadata {
   return generateMetadata({
     title,
@@ -108,12 +108,19 @@ export function generateArticleMetadata({
  * Common SEO keywords for the site
  */
 export const commonKeywords = [
+  'Arnav Roy',
+  'Creative Director',
+  'Video Shooting',
+  'Ad Shoots',
+  'Video Editing',
+  '3D Post Production',
   'Web Development',
+  'Freelance Services',
+  'Gen AI',
+  'Hyderabad India',
   'Portfolio',
-  'Digital Services',
   'Next.js',
   'React',
-  'TypeScript',
 ]
 
 /**

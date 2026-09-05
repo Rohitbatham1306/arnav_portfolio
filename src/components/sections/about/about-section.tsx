@@ -212,7 +212,7 @@ const AboutSection = () => {
                 }}
                 className="text-4xl md:text-5xl font-black tracking-tighter leading-none"
               >
-                Your Name
+                Arnav Roy
               </motion.h2>
 
               <motion.p
@@ -222,7 +222,7 @@ const AboutSection = () => {
                 transition={{ duration: 0.7, delay: 0.2 }}
                 className="font-mono text-sm uppercase tracking-widest text-primary"
               >
-                Creative Director & Video Editor
+                Creative Director, Video Producer & Web Developer
               </motion.p>
 
               <motion.p
@@ -230,11 +230,11 @@ const AboutSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.3 }}
-                className="text-muted-foreground text-[15px] leading-relaxed max-w-xs"
+                className="text-muted-foreground text-[15px] leading-relaxed max-w-sm"
               >
-                Crafting high-impact visuals for gaming, sports, and lifestyle
-                brands. Turning raw footage into stories that resonate and
-                convert.
+                Based in Hyderabad, India • Available Worldwide for freelance
+                projects, commercial video shooting, ad shoots, video editing,
+                and modern web development.
               </motion.p>
             </div>
 
@@ -247,15 +247,16 @@ const AboutSection = () => {
               className="flex flex-wrap gap-2"
             >
               {[
-                "2D Animation",
+                "Freelance Services",
+                "Video Shooting & Ads",
+                "Video Editing & 3D",
+                "Web Development",
+                "Gen AI & Workflows",
                 "Motion Design",
-                "Video Editing",
-                "Color Grading",
-                "Brand Direction",
               ].map((tag) => (
                 <span
                   key={tag}
-                  className="px-5 py-2 rounded border border-border bg-muted text-xs font-mono uppercase tracking-wider text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors duration-300 cursor-default"
+                  className="px-4 py-1.5 rounded border border-border bg-muted text-xs font-mono uppercase tracking-wider text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors duration-300 cursor-default"
                 >
                   {tag}
                 </span>

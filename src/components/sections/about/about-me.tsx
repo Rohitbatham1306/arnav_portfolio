@@ -90,11 +90,11 @@ const AboutMe = () => {
             </span>
             <span className="w-1 h-1 bg-foreground rounded-full" />
             <span className="hover:text-primary transition-colors cursor-pointer">
-              AI & Marketing
+              Video & Ad Shoots
             </span>
             <span className="w-1 h-1 bg-foreground rounded-full" />
             <span className="hover:text-primary transition-colors cursor-pointer">
-              Production & Technology
+              Web Development & Freelance
             </span>
           </div>
         </div>
