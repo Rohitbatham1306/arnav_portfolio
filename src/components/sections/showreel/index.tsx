@@ -36,11 +36,11 @@ function VimeoBackdrop({
   // Strictly control audio & playback state for active vs inactive slides and play/pause
   useEffect(() => {
     if (!videoRef.current) return;
-    videoRef.current.volume = 0.4;
+    videoRef.current.volume = 0.2;
 
     if (isActive) {
       videoRef.current.muted = isMuted;
-      videoRef.current.volume = 0.4;
+      videoRef.current.volume = 0.2;
 
       if (isPlaying) {
         const playPromise = videoRef.current.play();
@@ -89,7 +89,7 @@ function VimeoBackdrop({
           loop
           muted={!isActive || isMuted}
           onLoadedMetadata={(e) => {
-            e.currentTarget.volume = 0.4;
+            e.currentTarget.volume = 0.2;
           }}
           onEnded={() => {
             if (isActive && onVideoEnded) {

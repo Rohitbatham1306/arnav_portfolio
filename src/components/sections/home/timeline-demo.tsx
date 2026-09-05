@@ -47,6 +47,9 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
           loop
           muted
           playsInline
+          onLoadedMetadata={(e) => {
+            e.currentTarget.volume = 0.2;
+          }}
           className="w-full h-full object-cover transition-opacity duration-300"
         />
 

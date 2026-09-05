@@ -1,19 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoverState, setHoverState] = useState<
-    "default" | "link" | "button" | "text"
-  >("default");
-  const [hoverText, setHoverText] = useState("");
+  const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    // Check if it's a touch device
+    // Detect touch device
     if (window.matchMedia("(pointer: coarse)").matches) {
       setIsTouchDevice(true);
       return;
@@ -21,52 +19,35 @@ export default function CustomCursor() {
 
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
-      setIsVisible((prev) => {
-        if (!prev) return true;
-        return prev;
-      });
+      if (!isVisible) setIsVisible(true);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (!target || !target.tagName) return;
 
-      // Find the closest clickable element
       const clickable = target.closest(
-        "a, button, input, textarea, select, [role='button'], .cursor-pointer",
+        "a, button, input, textarea, select, [role='button'], .cursor-pointer, [data-clickable='true']"
       );
 
-      if (clickable) {
-        const text = clickable.getAttribute("data-cursor-text");
-        if (text) {
-          setHoverState("text");
-          setHoverText(text);
-        } else if (clickable.tagName.toLowerCase() === "a") {
-          setHoverState("link");
-        } else {
-          setHoverState("button");
-        }
-      } else {
-        setHoverState("default");
-        setHoverText("");
-      }
+      setIsHovered(!!clickable);
     };
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
+    const handleMouseDown = () => setIsClicked(true);
+    const handleMouseUp = () => setIsClicked(false);
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
-    const handleMouseEnter = () => {
-      setIsVisible(true);
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousemove", updateMousePosition, { passive: true });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Add global style to hide cursor on all elements
+    // Hide default cursor across interactive elements
     const style = document.createElement("style");
+    style.id = "custom-cursor-style";
     style.innerHTML = `
       * {
         cursor: none !important;
@@ -77,101 +58,56 @@ export default function CustomCursor() {
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
-      if (document.head.contains(style)) {
-        document.head.removeChild(style);
-      }
+      const existingStyle = document.getElementById("custom-cursor-style");
+      if (existingStyle) existingStyle.remove();
     };
-  }, []);
+  }, [isVisible]);
 
   if (isTouchDevice || !isVisible) return null;
 
-  const isHovering = hoverState !== "default";
-  const showIcon = hoverState === "link";
-  const showText = hoverState === "text";
-
   return (
     <>
-      {/* Main dot */}
+      {/* Precision Center Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
         animate={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
-          scale: isHovering ? 0 : 1,
-          opacity: isHovering ? 0 : 1,
+          x: mousePosition.x - 3,
+          y: mousePosition.y - 3,
+          scale: isClicked ? 0.6 : isHovered ? 1.4 : 1,
         }}
         transition={{
           type: "spring",
-          stiffness: 1000,
-          damping: 40,
-          mass: 0.1,
+          stiffness: 1200,
+          damping: 50,
+          mass: 0.05,
         }}
       />
 
-      {/* Trailing circle / Hover state */}
+      {/* Minimalist Trailing Ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] mix-blend-difference flex items-center justify-center overflow-hidden"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] mix-blend-difference"
         animate={{
-          x: isHovering ? mousePosition.x - 40 : mousePosition.x - 16,
-          y: isHovering ? mousePosition.y - 40 : mousePosition.y - 16,
-          width: isHovering ? 80 : 32,
-          height: isHovering ? 80 : 32,
-          backgroundColor: isHovering
-            ? "rgba(255, 255, 255, 1)"
-            : "transparent",
-          border: isHovering
-            ? "0px solid rgba(255, 255, 255, 0)"
-            : "1px solid rgba(255, 255, 255, 1)",
+          x: isHovered ? mousePosition.x - 18 : mousePosition.x - 12,
+          y: isHovered ? mousePosition.y - 18 : mousePosition.y - 12,
+          width: isHovered ? 36 : 24,
+          height: isHovered ? 36 : 24,
+          borderWidth: isHovered ? "1.5px" : "1px",
+          borderColor: "rgba(255, 255, 255, 0.85)",
+          backgroundColor: isHovered ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0)",
+          scale: isClicked ? 0.85 : 1,
         }}
         transition={{
           type: "spring",
-          stiffness: 400,
-          damping: 28,
-          mass: 0.5,
+          stiffness: 500,
+          damping: 32,
+          mass: 0.2,
         }}
-      >
-        <AnimatePresence mode="wait">
-          {showIcon && (
-            <motion.div
-              key="icon"
-              initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
-              transition={{ duration: 0.2 }}
-              className="text-black"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </motion.div>
-          )}
-          {showText && (
-            <motion.div
-              key="text"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.2 }}
-              className="text-black text-sm font-bold uppercase tracking-widest"
-            >
-              {hoverText}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+      />
     </>
   );
 }
+

@@ -36,7 +36,7 @@ export function VideoModal({ item, onClose }: VideoModalProps) {
                   controls
                   playsInline
                   onLoadedMetadata={(e) => {
-                    e.currentTarget.volume = 0.4;
+                    e.currentTarget.volume = 0.2;
                   }}
                   className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
                 />
