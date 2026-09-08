@@ -173,7 +173,7 @@ const AboutSection = () => {
 
               <Image
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop"
-                alt="Your Name — Creative Director"
+                alt="Arnav Roy — Creative Director"
                 fill
                 priority
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"

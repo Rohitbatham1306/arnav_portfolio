@@ -62,7 +62,7 @@ const AboutMe = () => {
       >
         <div className="flex items-center gap-4 [writing-mode:vertical-rl] rotate-180 bg-black/40 backdrop-blur-md py-4 px-2 rounded-full border border-white/10">
           <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-gray-400">
-            Featured Work
+             About Me
           </span>
           <span className="w-1 h-1 bg-foreground rounded-full" />
           <span className="text-xs font-bold">Creative Direction</span>
@@ -82,7 +82,7 @@ const AboutMe = () => {
       >
         <div className="flex flex-col gap-2 bg-black/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 shadow-lg">
           <p className="text-xs font-mono uppercase text-gray-400">
-            Featured Work
+              About Me
           </p>
           <div className="flex items-center gap-4 text-sm font-bold">
             <span className="hover:text-primary transition-colors cursor-pointer">
@@ -123,11 +123,11 @@ const AboutMe = () => {
             </Link>
             <span className="w-1 h-1 bg-foreground rounded-full" />
             <Link
-              href={"https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3"}
+              href={"https://www.behance.net/arnavroy"}
               target="_blank"
             >
               <span className="hover:text-primary transition-colors cursor-pointer">
-                YouTube
+                Behance
               </span>
             </Link>
           </div>

@@ -54,13 +54,13 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
         />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
         {/* Title bar */}
-        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10 pointer-events-none">
-          <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10 pointer-events-none">
+          <p className="font-mono text-xs font-semibold text-white/95 whitespace-pre-line break-words leading-snug tracking-wide drop-shadow-md">
             {title}
-          </span>
+          </p>
         </div>
       </div>
     </FeatureCard>
@@ -87,17 +87,17 @@ const ImageCard: React.FC<ImageCardProps> = ({
       <div className={`relative w-full ${aspect} overflow-hidden bg-neutral-950`}>
         <img
           src={src}
-          alt={title}
+          alt={typeof title === "string" ? title : "Card image"}
           className={`w-full h-full object-cover transition-opacity duration-300 ${imgClassName}`}
         />
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
         {/* Title bar */}
-        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex items-center justify-between z-10">
-          <span className="font-mono text-xs font-semibold text-white/90 truncate tracking-wide">
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10">
+          <p className="font-mono text-xs font-semibold text-white/95 whitespace-pre-line break-words leading-snug tracking-wide drop-shadow-md">
             {title}
-          </span>
+          </p>
         </div>
       </div>
     </FeatureCard>
@@ -128,7 +128,7 @@ export function TimelineDemo() {
               aspect="aspect-[16/10]"
             />
             <VideoPlayerCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/6%20(1).mp4"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1%20(1).MP4"
               title="AI Creative Direction 03"
               aspect="aspect-[16/10]"
             />
@@ -184,22 +184,22 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/1.jpeg"
-              title="Mentorship Session 01"
+              title={`Christ University Students\nIndustry Mentorship & Career Guidance`}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/2.jpeg"
-              title="Mentorship Session 02"
+              title={`Woxsen & Loyola Students\nCreative & AI Industry Interaction`}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/3.jpeg"
-              title="Workshop & Training 03"
+              title={`Manipal University Students\nGenerative AI & Creative Workshop`}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/5.jpeg"
-              title="AI Masterclass 04"
+              title={`Smart Mall Prototype\nAI-Powered Smart Mall Experience`}
               aspect="aspect-[16/10]"
             />
           </div>
@@ -207,7 +207,7 @@ export function TimelineDemo() {
       ),
     },
     {
-      title: "04. Production Work",
+      title: "04. Videography works",
       content: (
         <div>
           <h3 className="text-sm font-normal text-neutral-800 md:text-3xl dark:text-neutral-200">
@@ -219,22 +219,22 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/1.jpeg"
-              title="Production Visual Concept 01"
+              title="Script Production"
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/2.mp4"
-              title="Production Reel 02"
+              title="Testimonial Shoots"
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/3.mp4"
-              title="Production Reel 03"
+              title="Real Estate Shoots"
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/4.mp4"
-              title="Production Showcase 04"
+              title="School Brochure Shoots"
               aspect="aspect-[9/16]"
             />
           </div>
@@ -252,24 +252,24 @@ export function TimelineDemo() {
             <PhraseAnimation phrase="tech support • creative tech • digital workflows • automation • technical guidance" />
           </p>
           <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
-            <ImageCard
-              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/1.jpeg"
-              title="Tech Help Visual 01"
+            <VideoPlayerCard
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Service%20now%20Tech%20Support.mp4"
+              title={`Technical Execution & Client Experience\nTechnical Testing • Material Sourcing • Installation Support`}
               aspect="aspect-[9/16]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/2.jpeg"
-              title="Tech Help Visual 02"
+              title={`IPL-Inspired Interactive Game\nCreative Direction & Mall Activation`}
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/3%20(2).mp4"
-              title="Tech Help Demo 03"
+              title={`Interactive Brand Game\nCreative-Tech Collaboration • Game Experience`}
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/4%20(2).mp4"
-              title="Tech Help Showcase 04"
+              title={`Technical Testing & Experience Support\nTesting • Tech-Team Collaboration • Interactive Experience`}
               aspect="aspect-[9/16]"
             />
           </div>
@@ -289,13 +289,13 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Certificate%20Presentation%20Group%20Photo.png"
-              title="Award Felicitation & Industry Honor"
+              title={`3rd Place | GenAI Micro-Film Hackathon\nHyderabad • 25+ Film Entries`}
               aspect="aspect-[9/16]"
               imgClassName="object-top"
             />
             <ImageCard
-              src="/awards/IMG_9386.webp"
-              title="Digitopia Keynote & Recognition Session"
+              src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/WhatsApp%20Image%202026-09-07%20at%2015.15.11.jpeg"
+              title={`Logo Design & Concept Recognition\nBrand Identity • Creative Concept`}
               aspect="aspect-[9/16]"
               imgClassName="object-center"
             />

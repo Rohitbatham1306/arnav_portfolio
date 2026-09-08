@@ -257,11 +257,6 @@ export default function CreativeFooter() {
                 label="Behance"
               />
               <SocialLink
-                href="https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3"
-                icon={FaYoutube}
-                label="YouTube"
-              />
-              <SocialLink
                 href="https://discord.gg/dXU2Y36ZMT"
                 icon={FaDiscord}
                 label="Discord"

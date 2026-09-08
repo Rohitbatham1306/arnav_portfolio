@@ -110,11 +110,7 @@ const AboutScrollSection = () => {
             transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="mb-6 text-sm leading-relaxed text-white/85 sm:text-base drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
           >
-            Creative Director, Video Producer & Web Developer based in{" "}
-            <span className="text-white font-semibold">Hyderabad, India</span>.
-            Providing high-end freelance services spanning commercial video shooting, ad shoots,
-            advanced video editing, 3D post-production, full-stack web development, and next-generation
-            Gen AI automated workflows.
+            Creative leader with 6+ years of experience across advertising, branding, events, and production. Skilled in leading creative teams and delivering impactful campaigns across OOH, AdTech, SaaS, and digital platforms. I integrate AI, design, and technology into creative workflows to drive innovative ideas, efficient execution, and compelling visual storytelling that creates meaningful brand experiences.
           </motion.p>
 
           {/* Accent divider */}
@@ -129,7 +125,7 @@ const AboutScrollSection = () => {
             }}
           />
 
-          {/* Services & Discipline chips */}
+          {/* Software & AI Tools */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -138,25 +134,68 @@ const AboutScrollSection = () => {
             className="mb-7 flex flex-wrap items-center gap-2.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
           >
             {[
-              "FREELANCE SERVICES",
-              "VIDEO SHOOTING & AD SHOOTS",
-              "VIDEO EDITING & 3D",
-              "WEB DEVELOPMENT",
-              "AI CREATIVE DIRECTION",
-              "EVENT & COMMERCIAL PRODUCTION",
-            ].map((discipline, i) => (
+              {
+                name: "Higgsfield",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-gradient-to-br from-amber-500 to-rose-600 font-bold text-[10px] text-white shadow-sm">
+                    H
+                  </span>
+                ),
+                borderColor: "hover:border-amber-500/50",
+              },
+              {
+                name: "Runway",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-gradient-to-br from-emerald-400 to-cyan-500 font-bold text-[10px] text-black shadow-sm">
+                    R
+                  </span>
+                ),
+                borderColor: "hover:border-emerald-400/50",
+              },
+              {
+                name: "Veo",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 font-bold text-[10px] text-white shadow-sm">
+                    V
+                  </span>
+                ),
+                borderColor: "hover:border-blue-400/50",
+              },
+              {
+                name: "After Effects",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-[#00005B] border border-[#9999FF] font-bold text-[9px] text-[#9999FF] shadow-sm leading-none tracking-tighter">
+                    Ae
+                  </span>
+                ),
+                borderColor: "hover:border-[#9999FF]/60",
+              },
+              {
+                name: "PremierPro",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-[#12002B] border border-[#EA77FF] font-bold text-[9px] text-[#EA77FF] shadow-sm leading-none tracking-tighter">
+                    Pr
+                  </span>
+                ),
+                borderColor: "hover:border-[#EA77FF]/60",
+              },
+              {
+                name: "Photoshop",
+                badge: (
+                  <span className="flex size-5 items-center justify-center rounded bg-[#001E36] border border-[#31A8FF] font-bold text-[9px] text-[#31A8FF] shadow-sm leading-none tracking-tighter">
+                    Ps
+                  </span>
+                ),
+                borderColor: "hover:border-[#31A8FF]/60",
+              },
+            ].map((tool) => (
               <span
-                key={discipline}
-                className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/85 bg-white/5 px-2.5 py-1 rounded-md border border-white/10"
+                key={tool.name}
+                className={`flex items-center gap-2 text-xs font-medium text-white/90 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 transition-all duration-300 ${tool.borderColor} hover:bg-white/10 hover:scale-105`}
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
-                {i !== 0 && (
-                  <span
-                    className="h-1 w-1 rounded-full"
-                    style={{ backgroundColor: redColor }}
-                  />
-                )}
-                {discipline}
+                {tool.badge}
+                <span className="tracking-wide">{tool.name}</span>
               </span>
             ))}
           </motion.div>

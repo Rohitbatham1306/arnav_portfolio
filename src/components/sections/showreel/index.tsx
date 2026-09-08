@@ -414,7 +414,7 @@ export default function ShowReel() {
               transition={{ delay: 1.4, duration: 0.6 }}
               className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2 font-mono text-[10px] font-semibold tracking-[0.4em] text-white/25 uppercase"
             >
-              Scroll to Explore ↓
+             
             </motion.p>
           )}
         </AnimatePresence>

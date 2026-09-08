@@ -28,8 +28,8 @@ const cormorantGaramond = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Your Name - Professional Portfolio & Digital Services",
-    template: "%s | Your Name",
+    default: "Arnav Roy - Professional Portfolio & Digital Services",
+    template: "%s | Arnav Roy",
   },
   description:
     "Professional portfolio showcasing web development, design, and digital solutions. Expert in modern web technologies, creative design, and innovative digital experiences.",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     "Full Stack Developer",
     "Creative Solutions",
   ],
-  authors: [{ name: "Your Name" }],
-  creator: "Your Name",
-  publisher: "Your Name",
+  authors: [{ name: "Arnav Roy" }],
+  creator: "Arnav Roy",
+  publisher: "Arnav Roy",
   formatDetection: {
     email: false,
     address: false,
@@ -58,10 +58,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: BASE_URL,
-    title: "Your Name - Professional Portfolio & Digital Services",
+    title: "Arnav Roy - Professional Portfolio & Digital Services",
     description:
       "Explore a portfolio featuring cutting-edge web development projects, creative designs, and innovative digital solutions.",
-    siteName: "Your Name",
+    siteName: "Arnav Roy",
     images: [
       {
         url: OG_IMAGE,
@@ -74,10 +74,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Name - Professional Portfolio & Digital Services",
+    title: "Arnav Roy - Professional Portfolio & Digital Services",
     description:
       "Explore a portfolio featuring cutting-edge web development projects, creative designs, and innovative digital solutions.",
-    creator: "@yourhandle",
+    creator: "@arnavroy",
     images: [
       {
         url: OG_IMAGE,

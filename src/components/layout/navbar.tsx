@@ -23,7 +23,6 @@ const socialLinks = [
   { name: "Instagram", href: "https://www.instagram.com/iamfreakazo/" },
   { name: "LinkedIn", href: "https://www.linkedin.com/in/arnav-roy-05337b187/" },
   { name: "Behance", href: "https://www.behance.net/arnavroy" },
-  { name: "YouTube", href: "https://youtube.com/@arnavroy1586?si=KSgajk8q3kQijOY3" },
   { name: "Discord", href: "https://discord.gg/dXU2Y36ZMT" },
 ];
 
