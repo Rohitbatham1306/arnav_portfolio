@@ -135,10 +135,10 @@ const Navbar: React.FC = () => {
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center items-center">
       <div
         ref={scope}
-        className="w-4/5 md:w-xl border h-16 rounded bg-background/80 dark:bg-background/60 backdrop-blur-md flex flex-col overflow-hidden"
+        className="w-[92vw] max-w-[360px] sm:max-w-none sm:w-4/5 md:w-xl border h-16 rounded bg-background/80 dark:bg-background/60 backdrop-blur-md flex flex-col overflow-hidden"
       >
         {/* ── Top bar ──────────────────────────────── */}
-        <div className="flex justify-between items-center min-h-16 shrink-0 px-6">
+        <div className="flex justify-between items-center min-h-16 shrink-0 px-4 sm:px-6">
           <motion.button
             onClick={handleToggle}
             className="cursor-pointer relative h-6 w-6"
@@ -182,7 +182,7 @@ const Navbar: React.FC = () => {
             <Image
               src="/md-red-logo.svg"
               alt="Md Logo"
-              className="h-12 w-12 cursor-pointer"
+              className="h-10 w-10 sm:h-12 sm:w-12 cursor-pointer"
               width={12}
               height={12}
             />
@@ -203,7 +203,7 @@ const Navbar: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="flex flex-col flex-1 px-6 md:px-10 pt-4 pb-6 overflow-hidden"
+              className="flex flex-col flex-1 px-4 sm:px-6 md:px-10 pt-4 pb-6 overflow-y-auto"
             >
               {/* ── Main content: split layout ─────── */}
               <div className="flex flex-col md:flex-row flex-1 gap-8 md:gap-0">
@@ -251,11 +251,11 @@ const Navbar: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={handleToggle}
-                          className="group relative pr-6 flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-border/20 last:border-b-0"
+                          className="group relative pr-4 sm:pr-6 flex items-center gap-3 md:gap-6 py-2.5 sm:py-3 md:py-4 border-b border-border/20 last:border-b-0"
                         >
                           {/* Number */}
                           <motion.span
-                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-8 shrink-0"
+                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-6 sm:w-8 shrink-0"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{
@@ -278,7 +278,7 @@ const Navbar: React.FC = () => {
                                 ease: [0.22, 1, 0.36, 1],
                               }}
                             >
-                              <span className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
+                              <span className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
                                 {link.name}
                               </span>
 
@@ -333,11 +333,11 @@ const Navbar: React.FC = () => {
                         <Link
                           href={link.href}
                           onClick={handleToggle}
-                          className="group relative pr-6 flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b border-border/20 last:border-b-0"
+                          className="group relative pr-4 sm:pr-6 flex items-center gap-3 md:gap-6 py-2.5 sm:py-3 md:py-4 border-b border-border/20 last:border-b-0"
                         >
                           {/* Number */}
                           <motion.span
-                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-8 shrink-0"
+                            className="text-xs md:text-sm font-mono text-muted-foreground/60 w-6 sm:w-8 shrink-0"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{
@@ -360,7 +360,7 @@ const Navbar: React.FC = () => {
                                 ease: [0.22, 1, 0.36, 1],
                               }}
                             >
-                              <span className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
+                              <span className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none">
                                 {link.name}
                               </span>
 

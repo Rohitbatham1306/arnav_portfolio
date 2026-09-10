@@ -120,7 +120,7 @@ export default function CreativeFooter() {
               whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
               viewport={{ once: true }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-6xl font-bold tracking-tighter md:text-8xl lg:text-9xl"
+              className="text-5xl sm:text-6xl font-bold tracking-tighter md:text-8xl lg:text-9xl"
             >
               Let&apos;s make <br />
               <span className=" text-primary/80">waves.</span>

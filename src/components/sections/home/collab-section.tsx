@@ -98,7 +98,7 @@ const CollabSec: React.FC = () => {
         </motion.div>
 
         {/* ── SPLIT IMAGES ── */}
-        <div className="relative flex flex-row w-full h-auto  md:h-screen items-stretch">
+        <div className="relative flex flex-col md:flex-row w-full h-auto md:h-screen items-stretch">
           {/* LEFT */}
           <motion.div
             ref={leftRef}

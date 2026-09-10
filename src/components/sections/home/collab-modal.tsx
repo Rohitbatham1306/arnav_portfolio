@@ -242,7 +242,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
             <div className="relative z-10 h-full overflow-y-auto flex flex-col">
               {/* ── HEADER ── */}
               <motion.header
-                className="flex items-center justify-between px-8 md:px-16 pt-8 pb-5 shrink-0"
+                className="flex items-center justify-between px-5 sm:px-8 md:px-16 pt-6 sm:pt-8 pb-4 shrink-0"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.52, duration: 0.5 }}
@@ -296,7 +296,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
 
               {/* Thin top rule */}
               <motion.div
-                className="mx-8 md:mx-16 shrink-0"
+                className="mx-5 sm:mx-8 md:mx-16 shrink-0"
                 style={{
                   height: "1px",
                   background: "rgba(255,255,255,0.07)",
@@ -313,7 +313,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
               />
 
               {/* ── BODY ── */}
-              <div className="flex-1 flex flex-col lg:flex-row px-8 md:px-16 py-10 lg:py-0 gap-10 lg:gap-0 min-h-0">
+              <div className="flex-1 flex flex-col lg:flex-row px-5 sm:px-8 md:px-16 py-6 sm:py-10 lg:py-0 gap-8 lg:gap-0 min-h-0">
                 {/* ── LEFT — Typography ── */}
                 <div className="lg:w-[40%] flex flex-col justify-center lg:py-16 lg:pr-14">
                   <motion.p
@@ -326,7 +326,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
                       fontSize: "9px",
                       letterSpacing: "0.28em",
                       textTransform: "uppercase",
-                      marginBottom: "28px",
+                      marginBottom: "20px",
                     }}
                   >
                     ✦ INITIATE COLLABORATION
@@ -346,7 +346,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
                           }}
                           style={{
                             fontFamily: "var(--font-poppins)",
-                            fontSize: "clamp(50px, 7.5vw, 104px)",
+                            fontSize: "clamp(36px, 10vw, 104px)",
                             lineHeight: 0.87,
                             color: accent ? RED : "white",
                             fontWeight: "normal",

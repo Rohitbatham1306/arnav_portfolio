@@ -50,7 +50,7 @@ export function ReelCard({
       </motion.span>
 
       {/* ── TOP HUD ── */}
-      <div className="absolute inset-x-0 top-0 flex items-start justify-between px-8 pt-7 md:px-14">
+      <div className="absolute inset-x-0 top-0 flex items-start justify-between px-4 pt-5 sm:px-8 md:px-14">
         <div>
           <motion.p
             initial={{ opacity: 0, y: -10 }}
@@ -64,7 +64,7 @@ export function ReelCard({
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.16 }}
-            className="font-mono text-xl font-black uppercase tracking-tight text-white md:text-2xl"
+            className="font-mono text-lg sm:text-xl font-black uppercase tracking-tight text-white md:text-2xl"
           >
             Show Reel
           </motion.h2>
@@ -72,7 +72,7 @@ export function ReelCard({
       </div>
 
       {/* ── BOTTOM HUD ── */}
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 px-8 pb-10 md:px-14 pointer-events-none">
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 px-4 pb-20 sm:pb-14 md:px-14 pointer-events-none">
         <div className="flex max-w-xl flex-col gap-1.5">
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-primary font-semibold">
             ✦ Project
