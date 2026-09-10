@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { FaWhatsapp } from "react-icons/fa6";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -50,6 +51,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState(false);
+  const [waLink, setWaLink] = useState("");
 
   const {
     register,
@@ -84,6 +86,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
         reset();
         setSelectedType("");
         setIsSubmitting(false);
+        setWaLink("");
       }, 900);
       return () => clearTimeout(t);
     }
@@ -92,22 +95,34 @@ export default function CollabModal({ isOpen, onClose }: Props) {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     setSubmitError(false);
+
+    const projectTypeFormatted = selectedType || "General / Not Specified";
+    const waText =
+      `*New Collaboration Request* 🚀\n\n` +
+      `👤 *Name:* ${data.name.trim()}\n` +
+      `📧 *Email:* ${data.email.trim()}\n` +
+      `🎯 *Project Type:* ${projectTypeFormatted}\n\n` +
+      `💬 *Message:*\n${data.message.trim()}`;
+
+    const waUrl = `https://wa.me/918770794033?text=${encodeURIComponent(waText)}`;
+    setWaLink(waUrl);
+
+    // Also send email in background (if configured)
     try {
-      const res = await fetch("/api/collab", {
+      fetch("/api/collab", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, projectType: selectedType }),
-      });
-      if (res.ok) {
-        setIsSuccess(true);
-      } else {
-        setSubmitError(true);
-      }
+      }).catch((err) => console.warn("Collab email sync:", err));
     } catch {
-      setSubmitError(true);
-    } finally {
-      setIsSubmitting(false);
+      // Ignore background sync errors
     }
+
+    // Open WhatsApp directly with pre-filled message
+    window.open(waUrl, "_blank", "noopener,noreferrer");
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
   };
 
   const borderBottom = (field: string) =>
@@ -232,7 +247,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.52, duration: 0.5 }}
               >
-                <span
+                {/* <span
                   style={{
                     fontFamily: "var(--font-poppins)",
                     color: RED,
@@ -242,7 +257,7 @@ export default function CollabModal({ isOpen, onClose }: Props) {
                   }}
                 >
                   ✦ YOUR NAME
-                </span>
+                </span> */}
 
                 <motion.button
                   onClick={onClose}
@@ -756,37 +771,57 @@ export default function CollabModal({ isOpen, onClose }: Props) {
                             fontFamily: "var(--font-poppins)",
                             fontSize: "12px",
                             lineHeight: "1.85",
-                            color: "rgba(255,255,255,0.32)",
-                            marginBottom: "32px",
+                            color: "rgba(255,255,255,0.45)",
+                            marginBottom: "28px",
                           }}
                         >
-                          We&apos;ve received your transmission.
+                          Transmission prepped for WhatsApp.
                           <br />
-                          Expect a reply within 24–48 hours.
+                          If WhatsApp didn&apos;t open automatically, tap below:
                         </motion.p>
 
-                        <motion.button
-                          onClick={onClose}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.7, duration: 0.6 }}
-                          whileHover={{ x: -5 }}
-                          style={{
-                            fontFamily: "var(--font-poppins)",
-                            fontSize: "10px",
-                            letterSpacing: "0.3em",
-                            textTransform: "uppercase",
-                            color: RED,
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            padding: 0,
-                            textAlign: "left",
-                            width: "fit-content",
-                          }}
-                        >
-                          ← RETURN TO SITE
-                        </motion.button>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                          {waLink && (
+                            <motion.a
+                              href={waLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.6, duration: 0.6 }}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className="group flex items-center gap-3 px-6 py-3.5 border border-[#25D366]/40 bg-[#25D366]/10 hover:bg-[#25D366]/20 transition-all text-[#25D366] text-[11px] uppercase tracking-wider font-semibold"
+                              style={{ fontFamily: "var(--font-poppins)" }}
+                            >
+                              <FaWhatsapp className="text-base" />
+                              <span>Open WhatsApp Chat ↗</span>
+                            </motion.a>
+                          )}
+
+                          <motion.button
+                            onClick={onClose}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.7, duration: 0.6 }}
+                            whileHover={{ x: -5 }}
+                            style={{
+                              fontFamily: "var(--font-poppins)",
+                              fontSize: "10px",
+                              letterSpacing: "0.3em",
+                              textTransform: "uppercase",
+                              color: RED,
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: "8px 0",
+                              textAlign: "left",
+                              width: "fit-content",
+                            }}
+                          >
+                            ← RETURN TO SITE
+                          </motion.button>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>

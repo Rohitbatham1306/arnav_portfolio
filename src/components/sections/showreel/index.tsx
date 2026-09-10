@@ -4,10 +4,8 @@ import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
-  useMotionValue,
-  useSpring,
 } from "framer-motion";
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play } from "lucide-react";
 import { showRealData, type showReelI } from "@/data/show-reel";
 import { Grain } from "./grain";
 import { ReelCard } from "./reel-card";
@@ -130,7 +128,6 @@ export default function ShowReel() {
   const [dir, setDir] = useState(1);
   const [locked, setLocked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [cursorVisible, setCursorVisible] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Live sound enabled by default
 
@@ -139,12 +136,10 @@ export default function ShowReel() {
   const suppressClick = useRef(false);
   const total = showRealData.length;
 
-  // Detect touch / coarse-pointer devices → hide the custom play cursor
   useEffect(() => {
     setIsTouch(window.matchMedia("(pointer: coarse)").matches);
   }, []);
 
-  // Unmute on first user gesture if browser blocked unmuted autoplay initially
   useEffect(() => {
     const handleGesture = () => {
       setIsMuted(false);
@@ -157,7 +152,6 @@ export default function ShowReel() {
     };
   }, []);
 
-  // Which slide indices should have their iframes mounted (current + adjacent)
   const mountedIndices = useMemo(() => {
     const set = new Set<number>();
     set.add(active);
@@ -165,12 +159,6 @@ export default function ShowReel() {
     set.add((active - 1 + total) % total);
     return set;
   }, [active, total]);
-
-  // Cursor spring
-  const cursorX = useMotionValue(-200);
-  const cursorY = useMotionValue(-200);
-  const springX = useSpring(cursorX, { stiffness: 500, damping: 40 });
-  const springY = useSpring(cursorY, { stiffness: 500, damping: 40 });
 
   const navigate = useCallback(
     (step: number) => {
@@ -243,19 +231,11 @@ export default function ShowReel() {
       <Grain />
 
       <section
-        className={`relative h-dvh md:h-screen w-full select-none overflow-hidden bg-black ${
-          isTouch ? "cursor-auto" : "cursor-none"
-        }`}
+        className="relative h-dvh md:h-screen w-full select-none overflow-hidden bg-black cursor-pointer"
         style={{ touchAction: "pan-y" }}
         aria-label="Show Reel"
         onPointerDown={handleDragStart}
         onPointerUp={handleDragEnd}
-        onMouseMove={(e) => {
-          cursorX.set(e.clientX);
-          cursorY.set(e.clientY);
-        }}
-        onMouseEnter={() => setCursorVisible(true)}
-        onMouseLeave={() => setCursorVisible(false)}
       >
         {/* ── SOUND TOGGLE BUTTON (TOP RIGHT HUD) ── */}
         <div className="absolute top-7 right-8 md:right-14 z-30 flex items-center gap-3">
@@ -302,28 +282,6 @@ export default function ShowReel() {
             />
           );
         })}
-
-        {/* Custom play/pause cursor — desktop / fine-pointer only */}
-        {!isTouch && (
-          <motion.div
-            style={{ x: springX, y: springY }}
-            animate={{
-              opacity: cursorVisible ? 1 : 0,
-              scale: cursorVisible ? 1 : 0.5,
-            }}
-            transition={{
-              opacity: { duration: 0.2 },
-              scale: { duration: 0.2 },
-            }}
-            className="pointer-events-none fixed left-0 top-0 z-9998 flex size-18 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-sm shadow-2xl"
-          >
-            {isPlaying ? (
-              <Pause size={18} className="text-white fill-white" />
-            ) : (
-              <Play size={18} className="text-white fill-white translate-x-0.5" />
-            )}
-          </motion.div>
-        )}
 
         {/* Big subtle Center Play Indicator overlay when paused */}
         <AnimatePresence>

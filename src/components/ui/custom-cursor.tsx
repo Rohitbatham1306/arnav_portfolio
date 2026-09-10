@@ -45,7 +45,6 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Hide default cursor across interactive elements
     const style = document.createElement("style");
     style.id = "custom-cursor-style";
     style.innerHTML = `
@@ -70,44 +69,23 @@ export default function CustomCursor() {
   if (isTouchDevice || !isVisible) return null;
 
   return (
-    <>
-      {/* Precision Center Dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 3,
-          y: mousePosition.y - 3,
-          scale: isClicked ? 0.6 : isHovered ? 1.4 : 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 1200,
-          damping: 50,
-          mass: 0.05,
-        }}
-      />
-
-      {/* Minimalist Trailing Ring */}
-      <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] mix-blend-difference"
-        animate={{
-          x: isHovered ? mousePosition.x - 18 : mousePosition.x - 12,
-          y: isHovered ? mousePosition.y - 18 : mousePosition.y - 12,
-          width: isHovered ? 36 : 24,
-          height: isHovered ? 36 : 24,
-          borderWidth: isHovered ? "1.5px" : "1px",
-          borderColor: "rgba(255, 255, 255, 0.85)",
-          backgroundColor: isHovered ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0)",
-          scale: isClicked ? 0.85 : 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 32,
-          mass: 0.2,
-        }}
-      />
-    </>
+    <motion.div
+      className="fixed top-0 left-0 rounded-full pointer-events-none z-[99999] mix-blend-difference bg-white"
+      animate={{
+        x: isHovered ? mousePosition.x - 6 : mousePosition.x - 4,
+        y: isHovered ? mousePosition.y - 6 : mousePosition.y - 4,
+        width: isHovered ? 12 : 8,
+        height: isHovered ? 12 : 8,
+        scale: isClicked ? 0.75 : 1,
+        opacity: isVisible ? 1 : 0,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 1400,
+        damping: 45,
+        mass: 0.05,
+      }}
+    />
   );
 }
 

@@ -57,7 +57,7 @@ export default function Home() {
       </section>
       <CollabSec />
 
-      <Testimonials />
+      {/* <Testimonials /> */}
       {/* Contact Section — Book Time commented out (Cal link not configured) */}
       {/* <section id="contact" className="w-full scroll-mt-24">
         <CalBooking />

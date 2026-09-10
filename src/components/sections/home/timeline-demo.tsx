@@ -7,13 +7,86 @@ import PhraseAnimation from "@/components/common/phrase-reveal";
 interface VideoPlayerCardProps {
   src: string;
   title: string;
+  points?: string[];
   aspect?: string;
   className?: string;
 }
 
+interface ImageCardProps {
+  src: string;
+  title: string;
+  points?: string[];
+  aspect?: string;
+  className?: string;
+  imgClassName?: string;
+}
+
+const CardTitleContent: React.FC<{ title: string; points?: string[] }> = ({
+  title,
+  points,
+}) => {
+  if (points && points.length > 0) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <h4 className="font-semibold text-xs sm:text-sm text-white leading-tight drop-shadow-md tracking-tight">
+          {title}
+        </h4>
+        <ul className="flex flex-col gap-1">
+          {points.map((pt, i) => (
+            <li
+              key={i}
+              className="flex items-start gap-1.5 text-[10px] sm:text-[11px] font-mono text-white/80 leading-tight"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1" />
+              <span>{pt}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  if (title.includes("\n")) {
+    const [heading, ...rest] = title.split("\n");
+    const subpoints = rest
+      .join(" • ")
+      .split("•")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    return (
+      <div className="flex flex-col gap-1.5">
+        <h4 className="font-semibold text-xs sm:text-sm text-white leading-tight drop-shadow-md tracking-tight">
+          {heading.trim()}
+        </h4>
+        {subpoints.length > 0 && (
+          <ul className="flex flex-col gap-1">
+            {subpoints.map((pt, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-1.5 text-[10px] sm:text-[11px] font-mono text-white/80 leading-tight"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1" />
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <p className="font-mono text-xs font-semibold text-white/95 whitespace-pre-line break-words leading-snug tracking-wide drop-shadow-md">
+      {title}
+    </p>
+  );
+};
+
 const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
   src,
   title,
+  points,
   aspect = "aspect-[16/10]",
   className = "",
 }) => {
@@ -54,30 +127,21 @@ const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
         />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
 
         {/* Title bar */}
         <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10 pointer-events-none">
-          <p className="font-mono text-xs font-semibold text-white/95 whitespace-pre-line break-words leading-snug tracking-wide drop-shadow-md">
-            {title}
-          </p>
+          <CardTitleContent title={title} points={points} />
         </div>
       </div>
     </FeatureCard>
   );
 };
 
-interface ImageCardProps {
-  src: string;
-  title: string;
-  aspect?: string;
-  className?: string;
-  imgClassName?: string;
-}
-
 const ImageCard: React.FC<ImageCardProps> = ({
   src,
   title,
+  points,
   aspect = "aspect-[16/10]",
   className = "",
   imgClassName = "",
@@ -91,13 +155,11 @@ const ImageCard: React.FC<ImageCardProps> = ({
           className={`w-full h-full object-cover transition-opacity duration-300 ${imgClassName}`}
         />
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
 
         {/* Title bar */}
         <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10">
-          <p className="font-mono text-xs font-semibold text-white/95 whitespace-pre-line break-words leading-snug tracking-wide drop-shadow-md">
-            {title}
-          </p>
+          <CardTitleContent title={title} points={points} />
         </div>
       </div>
     </FeatureCard>
@@ -184,22 +246,26 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/1.jpeg"
-              title={`Christ University Students\nIndustry Mentorship & Career Guidance`}
+              title="Christ University Students"
+              points={["Industry Mentorship", "Career Guidance"]}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/2.jpeg"
-              title={`Woxsen & Loyola Students\nCreative & AI Industry Interaction`}
+              title="Woxsen & Loyola Students"
+              points={["Creative & AI Industry Interaction"]}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/3.jpeg"
-              title={`Manipal University Students\nGenerative AI & Creative Workshop`}
+              title="Manipal University Students"
+              points={["Generative AI & Creative Workshop"]}
               aspect="aspect-[16/10]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Mentorship-20260903T164100Z-1-001/Mentorship/5.jpeg"
-              title={`Smart Mall Prototype\nAI-Powered Smart Mall Experience`}
+              title="Smart Mall Prototype"
+              points={["AI-Powered Smart Mall Experience"]}
               aspect="aspect-[16/10]"
             />
           </div>
@@ -254,22 +320,40 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl">
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Service%20now%20Tech%20Support.mp4"
-              title={`Technical Execution & Client Experience\nTechnical Testing • Material Sourcing • Installation Support`}
+              title="Technical Execution & Client Experience"
+              points={[
+                "Technical Testing",
+                "Material Sourcing",
+                "Installation Support",
+              ]}
               aspect="aspect-[9/16]"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/2.jpeg"
-              title={`IPL-Inspired Interactive Game\nCreative Direction & Mall Activation`}
+              title="IPL-Inspired Interactive Game"
+              points={[
+                "Creative Direction",
+                "Mall Activation",
+              ]}
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/3%20(2).mp4"
-              title={`Interactive Brand Game\nCreative-Tech Collaboration • Game Experience`}
+              title="Interactive Brand Game"
+              points={[
+                "Creative-Tech Collaboration",
+                "Game Experience",
+              ]}
               aspect="aspect-[9/16]"
             />
             <VideoPlayerCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/techhelp/4%20(2).mp4"
-              title={`Technical Testing & Experience Support\nTesting • Tech-Team Collaboration • Interactive Experience`}
+              title="Technical Testing & Experience Support"
+              points={[
+                "Technical Testing",
+                "Tech-Team Collaboration",
+                "Interactive Experience",
+              ]}
               aspect="aspect-[9/16]"
             />
           </div>
@@ -289,13 +373,15 @@ export function TimelineDemo() {
           <div className="mx-auto grid gap-4 grid-cols-1 lg:grid-cols-2">
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/Certificate%20Presentation%20Group%20Photo.png"
-              title={`3rd Place | GenAI Micro-Film Hackathon\nHyderabad • 25+ Film Entries`}
+              title="3rd Place | GenAI Micro-Film Hackathon"
+              points={["Hyderabad", "25+ Film Entries"]}
               aspect="aspect-[9/16]"
               imgClassName="object-top"
             />
             <ImageCard
               src="https://pub-9a22c893ce8d4e1cab539cc82cbb08c2.r2.dev/WhatsApp%20Image%202026-09-07%20at%2015.15.11.jpeg"
-              title={`Logo Design & Concept Recognition\nBrand Identity • Creative Concept`}
+              title="Logo Design & Concept Recognition"
+              points={["Brand Identity", "Creative Concept"]}
               aspect="aspect-[9/16]"
               imgClassName="object-center"
             />

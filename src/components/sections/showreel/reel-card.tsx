@@ -35,16 +35,16 @@ export function ReelCard({
       initial="enter"
       animate="active"
       exit="exit"
-      className="absolute inset-0 z-10 cursor-none"
+      className="absolute inset-0 z-10"
       onClick={onTogglePlay}
     >
       {/* Ghost index watermark */}
       <motion.span
         initial={{ opacity: 0, x: 60 }}
-        animate={{ opacity: 0.06, x: 0 }}
+        animate={{ opacity: 0.04, x: 0 }}
         transition={{ delay: 0.15, duration: 0.7 }}
         className="pointer-events-none absolute bottom-0 right-6 select-none font-mono font-black leading-none text-white"
-        style={{ fontSize: "clamp(160px, 26vw, 340px)", lineHeight: 0.85 }}
+        style={{ fontSize: "clamp(100px, 16vw, 200px)", lineHeight: 0.85 }}
       >
         {padIndex(index)}
       </motion.span>
@@ -72,19 +72,21 @@ export function ReelCard({
       </div>
 
       {/* ── BOTTOM HUD ── */}
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 px-8 pb-10 md:px-14">
-        <div className="flex max-w-xl flex-col gap-4">
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 px-8 pb-10 md:px-14 pointer-events-none">
+        <div className="flex max-w-xl flex-col gap-1.5">
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-primary font-semibold">
+            ✦ Project
+          </span>
           <h3
-            className="font-mono font-black uppercase leading-tight tracking-wider text-white"
+            className="font-mono font-bold uppercase leading-tight tracking-wide text-white"
             style={{
-              fontSize: "clamp(2rem, 5vw, 4rem)",
-              textShadow: "0 4px 40px rgba(0,0,0,0.95)",
+              fontSize: "clamp(1.1rem, 2.2vw, 1.75rem)",
+              textShadow: "0 2px 20px rgba(0,0,0,0.9)",
             }}
           >
             <ScrambleText
               text={item.title}
               trigger
-              className="whitespace-nowrap"
             />
           </h3>
         </div>
